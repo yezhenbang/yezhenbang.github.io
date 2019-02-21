@@ -94,25 +94,25 @@
 
 
 
-  <meta name="description" content="note to git..">
-<meta name="keywords" content="git">
+  <meta name="description" content="Note from daily use.">
+<meta name="keywords" content="C++">
 <meta property="og:type" content="article">
-<meta property="og:title" content="git note">
-<meta property="og:url" content="https://yezhenbang.github.io/2019/02/21/git-note/index.html">
+<meta property="og:title" content="C++ skills record">
+<meta property="og:url" content="https://yezhenbang.github.io/C-skills-record/index.html">
 <meta property="og:site_name" content="bon">
-<meta property="og:description" content="note to git..">
+<meta property="og:description" content="Note from daily use.">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2019-02-21T08:03:45.027Z">
+<meta property="og:updated_time" content="2019-02-21T08:03:47.462Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="git note">
-<meta name="twitter:description" content="note to git..">
+<meta name="twitter:title" content="C++ skills record">
+<meta name="twitter:description" content="Note from daily use.">
 
 
 
 
 
 
-  <link rel="canonical" href="https://yezhenbang.github.io/2019/02/21/git-note/">
+  <link rel="canonical" href="https://yezhenbang.github.io/C-skills-record/">
 
 
 
@@ -122,7 +122,7 @@
   };
 </script>
 
-  <title>git note | bon</title>
+  <title>C++ skills record | bon</title>
   
 
 
@@ -367,7 +367,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://yezhenbang.github.io/2019/02/21/git-note/">
+    <link itemprop="mainEntityOfPage" href="https://yezhenbang.github.io/C-skills-record/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Bon">
@@ -384,7 +384,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">git note
+          <h1 class="post-title" itemprop="name headline">C++ skills record
 
               
             
@@ -410,12 +410,24 @@
                 
               
 
-              <time title="Created: 2019-02-21 15:21:59 / Modified: 16:03:45" itemprop="dateCreated datePublished" datetime="2019-02-21T15:21:59+08:00">2019-02-21</time>
+              <time title="Created: 2019-02-12 17:55:49" itemprop="dateCreated datePublished" datetime="2019-02-12T17:55:49+08:00">2019-02-12</time>
             
 
             
               
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2019-02-21 16:03:47" itemprop="dateModified" datetime="2019-02-21T16:03:47+08:00">2019-02-21</time>
               
             
           </span>
@@ -467,18 +479,47 @@
       
 
       
-        <p>note to git..</p>
+        <p>Note from daily use.</p>
 <a id="more"></a>
-<h2 id="修改账户"><a href="#修改账户" class="headerlink" title="修改账户"></a>修改账户</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git config --global user.name &quot;username&quot;</span><br><span class="line"> </span><br><span class="line">git config --global user.email &quot;email&quot;</span><br></pre></td></tr></table></figure>
-<p>这个配置修改提交代码的贡献者。</p>
-<p>如果更换了账号且使用https的情况下，push还是会使用原账号，出现权限失败问题。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">remote: Permission to *.git denied to *.</span><br><span class="line">fatal: unable to access &apos;https://github.com/*.git/&apos;: The requested URL returned error: 403</span><br></pre></td></tr></table></figure>
-<ul>
-<li>编辑<code>控制面板-用户-Windows凭据</code>下的<code>git:https://github.com</code>账号及密码即可。</li>
-<li>改用ssh方式即可。</li>
+<h1 id="C-11"><a href="#C-11" class="headerlink" title="C++11"></a>C++11</h1><h2 id="decltype"><a href="#decltype" class="headerlink" title="decltype"></a>decltype</h2><p>字面意思类型获取，可通过表达式分析出结果类型。</p>
+<p>参考：<a href="https://www.cnblogs.com/cauchy007/p/4966485.html" target="_blank" rel="noopener">https://www.cnblogs.com/cauchy007/p/4966485.html</a></p>
+<h3 id="引申：追踪返回类型"><a href="#引申：追踪返回类型" class="headerlink" title="引申：追踪返回类型"></a>引申：追踪返回类型</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">template &lt;typename T1, typename T2&gt;</span><br><span class="line">auto sum(T1&amp; t1, T2&amp; t2) -&gt; decltype(t1 + t2) &#123;</span><br><span class="line">    return t1 + t2;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>编译通过，执行时根据<code>decltype(t1 + t2)</code>判断类型，结合auto实现自动判断函数返回类型。</p>
+<hr>
+<p># </p>
+<h2 id="宏"><a href="#宏" class="headerlink" title="宏"></a>宏</h2><ul>
+<li><p>ANSI C标准中有几个标准预定义宏（也是常用的）：</p>
+<p>  <code>__LINE__</code>：在源代码中插入当前源代码行号；</p>
+<p>  <code>__FILE__</code>：在源文件中插入当前源文件名；</p>
+<p>  <code>__DATE__</code>：在源文件中插入当前的编译日期</p>
+<p>  <code>__TIME__</code>：在源文件中插入当前编译时间；</p>
+<p>  <code>__STDC_</code>_`：当要求程序严格遵循ANSI C标准时该标识被赋值为1；</p>
+<p>  <code>__cplusplus</code>：当编写C++程序时该标识符被定义。</p>
+<p>  <strong>以上宏在编译时被替换，像DATE、TIME是被固定的</strong>，企图用在日志名字是不现实的</p>
+</li>
+<li><p><code>##</code>允许可变参数为空，如<code>#define CLOG(format, ...) consoleString(format, ##__VA_ARGS__);</code>，不加<code>##</code>时若CLOG(“haha”)会出错。</p>
+</li>
 </ul>
-<h2 id="fork仓库保持原仓库一致"><a href="#fork仓库保持原仓库一致" class="headerlink" title="fork仓库保持原仓库一致"></a>fork仓库保持原仓库一致</h2><p>添加一个remote源，使用该源来更新代码即可</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git remote add upstream &quot;origin.git&quot;</span><br><span class="line">git fetch upstream</span><br><span class="line">git merge upstream/master</span><br></pre></td></tr></table></figure>
+<h2 id="char-amp-string"><a href="#char-amp-string" class="headerlink" title="char &amp; string"></a>char &amp; string</h2><h3 id="TRUNCATE"><a href="#TRUNCATE" class="headerlink" title="_TRUNCATE"></a>_TRUNCATE</h3><p><a href="https://msdn.microsoft.com/zh-cn/library/ms175769%28v=vs.140%29?f=255&amp;MSPPError=-2147217396" target="_blank" rel="noopener">_TRUNCATE</a> 指定字符串截断行为；尽可能保留字符串并不产生错误。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">char src[] = &quot;1234567890&quot;;</span><br><span class="line">char dst[dst_len];</span><br><span class="line">errno_t err = _snprintf_s(dst, _countof(dst), _TRUNCATE, src);</span><br></pre></td></tr></table></figure>
+<ul>
+<li>dst_len &gt; strlen(src) , err = strlen(src);</li>
+<li>dst_len &lt;= strlen(src)<ul>
+<li>不使用_TRUNCATE，程序奔溃出错；</li>
+<li>使用_TRUNCATE，err = -1，dst保留最大字符串。</li>
+</ul>
+</li>
+</ul>
+<p>使用 <code>err = strncpy_s(dst, _countof(dst), src, _TRUNCATE);</code> 情况相同；</p>
+<ul>
+<li>dst_len &gt; strlen(src) , err = 0;</li>
+<li>dst_len &lt;= strlen(src)<ul>
+<li>不使用_TRUNCATE，使用_countof(src)，程序奔溃出错；</li>
+<li>使用_TRUNCATE，err = STRUNCATE，dst保留最大字符串。</li>
+</ul>
+</li>
+</ul>
+
       
     </div>
 
@@ -501,7 +542,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/git/" rel="tag"># git</a>
+            <a href="/tags/C/" rel="tag"># C++</a>
           
         </div>
       
@@ -514,8 +555,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/02/20/C-chrono-time-test/" rel="next" title="C++11 chrono库获取时间 精度">
-                <i class="fa fa-chevron-left"></i> C++11 chrono库获取时间 精度
+              <a href="/hello-world/" rel="next" title="Hello World">
+                <i class="fa fa-chevron-left"></i> Hello World
               </a>
             
           </div>
@@ -524,8 +565,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2020/02/15/TensorFlow-Plan/" rel="prev" title="TensorFlow-Plan">
-                TensorFlow-Plan <i class="fa fa-chevron-right"></i>
+              <a href="/TensorFlow-Note/" rel="prev" title="TensorFlow Note">
+                TensorFlow Note <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -695,7 +736,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#修改账户"><span class="nav-number">1.</span> <span class="nav-text">修改账户</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#fork仓库保持原仓库一致"><span class="nav-number">2.</span> <span class="nav-text">fork仓库保持原仓库一致</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#C-11"><span class="nav-number">1.</span> <span class="nav-text">C++11</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#decltype"><span class="nav-number">1.1.</span> <span class="nav-text">decltype</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#引申：追踪返回类型"><span class="nav-number">1.1.1.</span> <span class="nav-text">引申：追踪返回类型</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#宏"><span class="nav-number">1.2.</span> <span class="nav-text">宏</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#char-amp-string"><span class="nav-number">1.3.</span> <span class="nav-text">char &amp; string</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#TRUNCATE"><span class="nav-number">1.3.1.</span> <span class="nav-text">_TRUNCATE</span></a></li></ol></li></ol></li></ol></div>
             
 
           </div>
