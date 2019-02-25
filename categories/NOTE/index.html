@@ -96,7 +96,7 @@
 
   <meta property="og:type" content="website">
 <meta property="og:title" content="bon">
-<meta property="og:url" content="https://yezhenbang.github.io/categories/NOTE/index.html">
+<meta property="og:url" content="https://yezhenbang.github.io/categories/Note/index.html">
 <meta property="og:site_name" content="bon">
 <meta property="og:locale" content="en">
 <meta name="twitter:card" content="summary">
@@ -107,7 +107,7 @@
 
 
 
-  <link rel="canonical" href="https://yezhenbang.github.io/categories/NOTE/">
+  <link rel="canonical" href="https://yezhenbang.github.io/categories/Note/">
 
 
 
@@ -117,7 +117,7 @@
   };
 </script>
 
-  <title>Category: NOTE | bon</title>
+  <title>Category: Note | bon</title>
   
 
 
@@ -375,7 +375,7 @@
 
     <div id="posts" class="posts-collapse">
       <div class="collection-title">
-        <h1>NOTE<small>Category</small>
+        <h1>Note<small>Category</small>
         </h1>
       </div>
 
@@ -387,69 +387,17 @@
 
       <h2 class="post-title">
         
-          <a class="post-title-link" href="/Note-Git/" itemprop="url">
+          <a class="post-title-link" href="/post/Note-1/" itemprop="url">
             
-              <span itemprop="name">git note</span>
-            
-          </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2019-02-21T15:21:59+08:00" content="2019-02-21">
-          02-21
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-      
-        
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-          <a class="post-title-link" href="/C-chrono-time-test/" itemprop="url">
-            
-              <span itemprop="name">C++11 chrono库获取时间 精度</span>
+              <span itemprop="name">Note 概论信息论</span>
             
           </a>
         
       </h2>
 
       <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2019-02-20T18:11:45+08:00" content="2019-02-20">
-          02-20
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-      
-        
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-          <a class="post-title-link" href="/Note-C-skills/" itemprop="url">
-            
-              <span itemprop="name">C++ skills record</span>
-            
-          </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2019-02-12T17:55:49+08:00" content="2019-02-12">
-          02-12
+        <time class="post-time" itemprop="dateCreated" datetime="2019-02-22T14:31:23+08:00" content="2019-02-22">
+          02-22
         </time>
       </div>
 
@@ -526,7 +474,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">3</span>
+                      
+                    
+                    <span class="site-state-item-count">4</span>
                     <span class="site-state-item-name">categories</span>
                   </a>
                 </div>
@@ -1118,6 +1068,44 @@
       $(e).after($wrap);
       $wrap.append($('<button>').addClass('copy-btn').append('Copy').on('click', function(e) {
         var code = $(this).parent().find('.code').find('.line').map(function(i, e) {
+          return $(e).text();
+        }).toArray().join('\n');
+        var ta = document.createElement('textarea');
+        var range = document.createRange(); //For Chrome
+        var sel = window.getSelection(); //For Chrome
+        var yPosition = window.pageYOffset || document.documentElement.scrollTop;
+        ta.style.top = yPosition + 'px'; //Prevent page scroll
+        ta.style.position = 'absolute';
+        ta.style.opacity = '0';
+        ta.value = code;
+        ta.textContent = code; //For FireFox
+        ta.contentEditable = true;
+        ta.readOnly = false;
+        document.body.appendChild(ta);
+        range.selectNode(ta);
+        sel.removeAllRanges();
+        sel.addRange(range);
+        ta.setSelectionRange(0, code.length);
+        var result = document.execCommand('copy');
+        
+          if (result) $(this).text('Copied');
+          else $(this).text('Copy failed');
+        
+        ta.blur(); //For iOS
+        $(this).blur();
+      })).on('mouseleave', function(e) {
+        var $b = $(this).find('.copy-btn');
+        setTimeout(function() {
+          $b.text('Copy');
+        }, 300);
+      }).append(e);
+    })
+  </script>
+
+
+</body>
+</html>
+ode').find('.line').map(function(i, e) {
           return $(e).text();
         }).toArray().join('\n');
         var ta = document.createElement('textarea');
