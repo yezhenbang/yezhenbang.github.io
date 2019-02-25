@@ -94,25 +94,20 @@
 
 
 
-  <meta name="description" content="note to git..">
-<meta name="keywords" content="git">
-<meta property="og:type" content="article">
-<meta property="og:title" content="git note">
-<meta property="og:url" content="https://yezhenbang.github.io/Note-Git/index.html">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="bon">
+<meta property="og:url" content="https://yezhenbang.github.io/page/2/index.html">
 <meta property="og:site_name" content="bon">
-<meta property="og:description" content="note to git..">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2019-02-22T07:32:04.878Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="git note">
-<meta name="twitter:description" content="note to git..">
+<meta name="twitter:title" content="bon">
 
 
 
 
 
 
-  <link rel="canonical" href="https://yezhenbang.github.io/Note-Git/">
+  <link rel="canonical" href="https://yezhenbang.github.io/page/2/">
 
 
 
@@ -122,7 +117,7 @@
   };
 </script>
 
-  <title>git note | bon</title>
+  <title>bon</title>
   
 
 
@@ -170,7 +165,8 @@
     
   
 
-  <div class="container sidebar-position-left page-post-detail">
+  <div class="container sidebar-position-left 
+  page-home">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
@@ -350,9 +346,9 @@
           
           <div id="content" class="content">
             
-
-  <div id="posts" class="posts-expand">
+  <section id="posts" class="posts-expand">
     
+      
 
   
 
@@ -367,7 +363,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://yezhenbang.github.io/Note-Git/">
+    <link itemprop="mainEntityOfPage" href="https://yezhenbang.github.io/post/hello-world/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Bon">
@@ -384,8 +380,10 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">git note
-
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/post/hello-world/" class="post-title-link" itemprop="url">Hello World</a>
               
             
           </h1>
@@ -410,7 +408,7 @@
                 
               
 
-              <time title="Created: 2019-02-21 15:21:59" itemprop="dateCreated datePublished" datetime="2019-02-21T15:21:59+08:00">2019-02-21</time>
+              <time title="Created: 2019-02-11 17:33:54" itemprop="dateCreated datePublished" datetime="2019-02-11T17:33:54+08:00">2019-02-11</time>
             
 
             
@@ -427,7 +425,7 @@
                 
                   <span class="post-meta-item-text">Edited on</span>
                 
-                <time title="Modified: 2019-02-22 15:32:04" itemprop="dateModified" datetime="2019-02-22T15:32:04+08:00">2019-02-22</time>
+                <time title="Modified: 2019-02-21 16:01:27" itemprop="dateModified" datetime="2019-02-21T16:01:27+08:00">2019-02-21</time>
               
             
           </span>
@@ -444,7 +442,7 @@
                 <span class="post-meta-item-text">In</span>
               
               
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/NOTE/" itemprop="url" rel="index"><span itemprop="name">NOTE</span></a></span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/study/" itemprop="url" rel="index"><span itemprop="name">study</span></a></span>
 
                 
                 
@@ -479,20 +477,19 @@
       
 
       
-        <p>note to git..</p>
-<a id="more"></a>
-<h2 id="修改账户"><a href="#修改账户" class="headerlink" title="修改账户"></a>修改账户</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git config --global user.name &quot;username&quot;</span><br><span class="line"> </span><br><span class="line">git config --global user.email &quot;email&quot;</span><br></pre></td></tr></table></figure>
-<p>这个配置修改提交代码的贡献者。</p>
-<p>如果更换了账号且使用https的情况下，push还是会使用原账号，出现权限失败问题。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">remote: Permission to *.git denied to *.</span><br><span class="line">fatal: unable to access &apos;https://github.com/*.git/&apos;: The requested URL returned error: 403</span><br></pre></td></tr></table></figure>
-<ul>
-<li>编辑<code>控制面板-用户-Windows凭据</code>下的<code>git:https://github.com</code>账号及密码即可。</li>
-<li>改用ssh方式即可。</li>
-</ul>
-<h2 id="fork仓库保持原仓库一致"><a href="#fork仓库保持原仓库一致" class="headerlink" title="fork仓库保持原仓库一致"></a>fork仓库保持原仓库一致</h2><p>添加一个remote源，使用该源来更新代码即可</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git remote add upstream &quot;origin.git&quot;</span><br><span class="line">git fetch upstream</span><br><span class="line">git merge upstream/master</span><br></pre></td></tr></table></figure>
-<h2 id="数学表达式"><a href="#数学表达式" class="headerlink" title="数学表达式"></a>数学表达式</h2><p><a href="https://www.codecogs.com/latex/eqneditor.php" target="_blank" rel="noopener">https://www.codecogs.com/latex/eqneditor.php</a></p>
-
+        
+          <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2>
+          <!--noindex-->
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/post/hello-world/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          
+          <!--/noindex-->
+        
       
     </div>
 
@@ -513,40 +510,14 @@
 
     <footer class="post-footer">
       
-        <div class="post-tags">
-          
-            <a href="/tags/git/" rel="tag"># git</a>
-          
-        </div>
+
+      
+
       
 
       
       
-      
-
-      
-        <div class="post-nav">
-          <div class="post-nav-next post-nav-item">
-            
-              <a href="/C-chrono-time-test/" rel="next" title="C++11 chrono库获取时间 精度">
-                <i class="fa fa-chevron-left"></i> C++11 chrono库获取时间 精度
-              </a>
-            
-          </div>
-
-          <span class="post-nav-divider"></span>
-
-          <div class="post-nav-prev post-nav-item">
-            
-              <a href="/Note-1/" rel="prev" title="Note 概论信息论">
-                Note 概论信息论 <i class="fa fa-chevron-right"></i>
-              </a>
-            
-          </div>
-        </div>
-      
-
-      
+        <div class="post-eof"></div>
       
     </footer>
   </div>
@@ -556,19 +527,18 @@
   </article>
 
 
-  </div>
+    
+  </section>
+
+  
+  <nav class="pagination">
+    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
+  </nav>
+
 
 
           </div>
           
-
-  
-    <div class="comments" id="gitalk-container">
-    </div>
-
-  
-
-
 
         </div>
         
@@ -589,17 +559,8 @@
       
 
       
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
-            Table of Contents
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
-            Overview
-          </li>
-        </ul>
-      
 
-      <div class="site-overview-wrap sidebar-panel">
+      <div class="site-overview-wrap sidebar-panel sidebar-panel-active">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
             
@@ -614,7 +575,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">9</span>
+                    <span class="site-state-item-count">11</span>
                     <span class="site-state-item-name">posts</span>
                   </a>
                 </div>
@@ -633,7 +594,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">3</span>
+                      
+                    
+                    <span class="site-state-item-count">4</span>
                     <span class="site-state-item-name">categories</span>
                   </a>
                 </div>
@@ -658,7 +621,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">6</span>
+                      
+                    
+                    <span class="site-state-item-count">7</span>
                     <span class="site-state-item-name">tags</span>
                   </a>
                 </div>
@@ -698,23 +663,6 @@
         </div>
       </div>
 
-      
-      <!--noindex-->
-        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-
-            
-            
-            
-            
-
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#修改账户"><span class="nav-number">1.</span> <span class="nav-text">修改账户</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#fork仓库保持原仓库一致"><span class="nav-number">2.</span> <span class="nav-text">fork仓库保持原仓库一致</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数学表达式"><span class="nav-number">3.</span> <span class="nav-text">数学表达式</span></a></li></ol></div>
-            
-
-          </div>
-        </div>
-      <!--/noindex-->
       
 
       
@@ -837,10 +785,6 @@
 
 
   
-  <script src="/js/src/scrollspy.js?v=7.0.0"></script>
-<script src="/js/src/post-details.js?v=7.0.0"></script>
-
-
 
   
 
@@ -851,34 +795,6 @@
 
   
 
-
-  
-    
-
-<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
-
-
-
-<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
-
-
-
-<script src="//cdn.jsdelivr.net/npm/js-md5@0.7.3/src/md5.min.js"></script>
-
-<script>
-  var gitalk = new Gitalk({
-    clientID: '262d1fe0ae8ea70809f1',
-    clientSecret: '248d4ca388eac2a7e04d45d9e76e5e810c9b77a7',
-    repo: 'yezhenbang.github.io',
-    owner: 'yezhenbang',
-    admin: ['yezhenbang'],
-    id: md5(location.pathname),
-    distractionFreeMode: 'true'
-  });
-  gitalk.render('gitalk-container');
-</script>
-
-  
 
 
   

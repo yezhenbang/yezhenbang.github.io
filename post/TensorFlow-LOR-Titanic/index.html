@@ -94,25 +94,25 @@
 
 
 
-  <meta name="description" content="Note from daily use.">
-<meta name="keywords" content="C++">
+  <meta name="description" content="Tensorflow 逻辑回归实例">
+<meta name="keywords" content="tensorflow,kaggle">
 <meta property="og:type" content="article">
-<meta property="og:title" content="C++ skills record">
-<meta property="og:url" content="https://yezhenbang.github.io/Note-C-skills/index.html">
+<meta property="og:title" content="TF逻辑回归 预测KAGGLE:Titanic问题">
+<meta property="og:url" content="https://yezhenbang.github.io/post/TensorFlow-LOR-Titanic/index.html">
 <meta property="og:site_name" content="bon">
-<meta property="og:description" content="Note from daily use.">
+<meta property="og:description" content="Tensorflow 逻辑回归实例">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2019-02-22T06:32:02.977Z">
+<meta property="og:updated_time" content="2019-02-25T09:27:47.744Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="C++ skills record">
-<meta name="twitter:description" content="Note from daily use.">
+<meta name="twitter:title" content="TF逻辑回归 预测KAGGLE:Titanic问题">
+<meta name="twitter:description" content="Tensorflow 逻辑回归实例">
 
 
 
 
 
 
-  <link rel="canonical" href="https://yezhenbang.github.io/Note-C-skills/">
+  <link rel="canonical" href="https://yezhenbang.github.io/post/TensorFlow-LOR-Titanic/">
 
 
 
@@ -122,7 +122,7 @@
   };
 </script>
 
-  <title>C++ skills record | bon</title>
+  <title>TF逻辑回归 预测KAGGLE:Titanic问题 | bon</title>
   
 
 
@@ -367,7 +367,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://yezhenbang.github.io/Note-C-skills/">
+    <link itemprop="mainEntityOfPage" href="https://yezhenbang.github.io/post/TensorFlow-LOR-Titanic/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Bon">
@@ -384,7 +384,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">C++ skills record
+          <h1 class="post-title" itemprop="name headline">TF逻辑回归 预测KAGGLE:Titanic问题
 
               
             
@@ -410,46 +410,16 @@
                 
               
 
-              <time title="Created: 2019-02-12 17:55:49" itemprop="dateCreated datePublished" datetime="2019-02-12T17:55:49+08:00">2019-02-12</time>
+              <time title="Created: 2019-02-25 17:10:02 / Modified: 17:27:47" itemprop="dateCreated datePublished" datetime="2019-02-25T17:10:02+08:00">2019-02-25</time>
             
 
             
               
 
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">Edited on</span>
-                
-                <time title="Modified: 2019-02-22 14:32:02" itemprop="dateModified" datetime="2019-02-22T14:32:02+08:00">2019-02-22</time>
               
             
           </span>
 
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/NOTE/" itemprop="url" rel="index"><span itemprop="name">NOTE</span></a></span>
-
-                
-                
-              
-            </span>
           
 
           
@@ -479,47 +449,10 @@
       
 
       
-        <p>Note from daily use.</p>
-<a id="more"></a>
-<h1 id="C-11"><a href="#C-11" class="headerlink" title="C++11"></a>C++11</h1><h2 id="decltype"><a href="#decltype" class="headerlink" title="decltype"></a>decltype</h2><p>字面意思类型获取，可通过表达式分析出结果类型。</p>
-<p>参考：<a href="https://www.cnblogs.com/cauchy007/p/4966485.html" target="_blank" rel="noopener">https://www.cnblogs.com/cauchy007/p/4966485.html</a></p>
-<h3 id="引申：追踪返回类型"><a href="#引申：追踪返回类型" class="headerlink" title="引申：追踪返回类型"></a>引申：追踪返回类型</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">template &lt;typename T1, typename T2&gt;</span><br><span class="line">auto sum(T1&amp; t1, T2&amp; t2) -&gt; decltype(t1 + t2) &#123;</span><br><span class="line">    return t1 + t2;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>编译通过，执行时根据<code>decltype(t1 + t2)</code>判断类型，结合auto实现自动判断函数返回类型。</p>
-<hr>
-<p># </p>
-<h2 id="宏"><a href="#宏" class="headerlink" title="宏"></a>宏</h2><ul>
-<li><p>ANSI C标准中有几个标准预定义宏（也是常用的）：</p>
-<p>  <code>__LINE__</code>：在源代码中插入当前源代码行号；</p>
-<p>  <code>__FILE__</code>：在源文件中插入当前源文件名；</p>
-<p>  <code>__DATE__</code>：在源文件中插入当前的编译日期</p>
-<p>  <code>__TIME__</code>：在源文件中插入当前编译时间；</p>
-<p>  <code>__STDC_</code>_`：当要求程序严格遵循ANSI C标准时该标识被赋值为1；</p>
-<p>  <code>__cplusplus</code>：当编写C++程序时该标识符被定义。</p>
-<p>  <strong>以上宏在编译时被替换，像DATE、TIME是被固定的</strong>，企图用在日志名字是不现实的</p>
-</li>
-<li><p><code>##</code>允许可变参数为空，如<code>#define CLOG(format, ...) consoleString(format, ##__VA_ARGS__);</code>，不加<code>##</code>时若CLOG(“haha”)会出错。</p>
-</li>
-</ul>
-<h2 id="char-amp-string"><a href="#char-amp-string" class="headerlink" title="char &amp; string"></a>char &amp; string</h2><h3 id="TRUNCATE"><a href="#TRUNCATE" class="headerlink" title="_TRUNCATE"></a>_TRUNCATE</h3><p><a href="https://msdn.microsoft.com/zh-cn/library/ms175769%28v=vs.140%29?f=255&amp;MSPPError=-2147217396" target="_blank" rel="noopener">_TRUNCATE</a> 指定字符串截断行为；尽可能保留字符串并不产生错误。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">char src[] = &quot;1234567890&quot;;</span><br><span class="line">char dst[dst_len];</span><br><span class="line">errno_t err = _snprintf_s(dst, _countof(dst), _TRUNCATE, src);</span><br></pre></td></tr></table></figure>
-<ul>
-<li>dst_len &gt; strlen(src) , err = strlen(src);</li>
-<li>dst_len &lt;= strlen(src)<ul>
-<li>不使用_TRUNCATE，程序奔溃出错；</li>
-<li>使用_TRUNCATE，err = -1，dst保留最大字符串。</li>
-</ul>
-</li>
-</ul>
-<p>使用 <code>err = strncpy_s(dst, _countof(dst), src, _TRUNCATE);</code> 情况相同；</p>
-<ul>
-<li>dst_len &gt; strlen(src) , err = 0;</li>
-<li>dst_len &lt;= strlen(src)<ul>
-<li>不使用_TRUNCATE，使用_countof(src)，程序奔溃出错；</li>
-<li>使用_TRUNCATE，err = STRUNCATE，dst保留最大字符串。</li>
-</ul>
-</li>
-</ul>
-
+        <p>Tensorflow 逻辑回归实例<br><a id="more"></a></p>
+<p><a href="https://www.kaggle.com/c/titanic" target="_blank" rel="noopener">问题描述</a></p>
+<p>使用tensorflow逻辑回归模型，用梯度下降法预测Titanic问题，只对数据进行数值化处理，得到77.9的准确率。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br></pre></td><td class="code"><pre><span class="line">#%% </span><br><span class="line">import pandas as pd</span><br><span class="line">import numpy as np</span><br><span class="line">from pandas import DataFrame</span><br><span class="line"></span><br><span class="line">data = pd.read_csv(&quot;D:\\KAGGLE\\Titanic\\train.csv&quot;)</span><br><span class="line"></span><br><span class="line">def MaxMinNormalization(x):</span><br><span class="line">    Max = np.max(x)</span><br><span class="line">    Min = np.min(x)</span><br><span class="line">    result = (x - Min) / (Max - Min)</span><br><span class="line">    return result</span><br><span class="line"></span><br><span class="line"># 基本数据处理</span><br><span class="line">data[&apos;Sex&apos;] = data[&apos;Sex&apos;].apply(lambda s:1 if s == &apos;male&apos; else 0)</span><br><span class="line">data[&apos;Age&apos;] = data.Age.fillna(data.Age.mean())</span><br><span class="line">data[&apos;Age&apos;] = MaxMinNormalization(data[&apos;Age&apos;])</span><br><span class="line">data[&apos;Fare&apos;] = MaxMinNormalization(data[&apos;Fare&apos;])</span><br><span class="line"></span><br><span class="line">data[&apos;Dead&apos;] = data[&apos;Survived&apos;].apply(lambda s:int(not s))</span><br><span class="line">data = data.join(pd.get_dummies(data.Embarked, prefix=&apos;Embarked&apos;))</span><br><span class="line"># data.drop([&apos;Embarked&apos;], axis=1, inplace=True)</span><br><span class="line">data.info()</span><br><span class="line"></span><br><span class="line">data_x = data.filter(regex=&apos;Pclass|Sex|Fare|Embarked_.*|Age|SibSp|Parch&apos;)</span><br><span class="line"># data_x = data[[&apos;Pclass&apos;, &apos;Sex&apos;, &apos;Fare&apos;, &apos;Embarked&apos;, &apos;Age&apos;, &apos;SibSp&apos;, &apos;Parch&apos;]]</span><br><span class="line">data_y = data[[&apos;Dead&apos;, &apos;Survived&apos;]]</span><br><span class="line"></span><br><span class="line">from sklearn.model_selection import train_test_split</span><br><span class="line">train_X, test_X, train_Y, test_Y = train_test_split(data_x, data_y, test_size=0.2, random_state=1)</span><br><span class="line">train_X.head()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#%%</span><br><span class="line"># 训练模型</span><br><span class="line">import tensorflow as tf</span><br><span class="line"></span><br><span class="line">learning_rate = 0.003</span><br><span class="line">training_epochs = 1000</span><br><span class="line">display_step = (int)(training_epochs / 10)</span><br><span class="line">batch_size = 50</span><br><span class="line">data_width = train_X.shape[1]</span><br><span class="line">data_len = train_X.shape[0]</span><br><span class="line"></span><br><span class="line">x = tf.placeholder(tf.float32, [None, data_width])</span><br><span class="line">y = tf.placeholder(tf.float32, [None, 2])</span><br><span class="line"></span><br><span class="line">W = tf.Variable(tf.zeros([data_width, 2]))</span><br><span class="line">b = tf.Variable(tf.zeros([2]))</span><br><span class="line"></span><br><span class="line"># 预测函数</span><br><span class="line">pred = tf.nn.softmax(tf.matmul(x, W) + b) # Softmax</span><br><span class="line"># loss函数</span><br><span class="line">cost = tf.reduce_mean(-tf.reduce_sum(y*tf.log(pred), reduction_indices=1))</span><br><span class="line">optimizer = tf.train.GradientDescentOptimizer(learning_rate).minimize(cost)</span><br><span class="line">init = tf.global_variables_initializer()</span><br><span class="line"></span><br><span class="line">saver = tf.train.Saver()</span><br><span class="line"># Start training</span><br><span class="line">with tf.Session() as sess:</span><br><span class="line">    # Run the initializer</span><br><span class="line">    sess.run(init)</span><br><span class="line"></span><br><span class="line">    # Training cycle</span><br><span class="line">    for epoch in range(training_epochs):</span><br><span class="line">        avg_cost = 0.</span><br><span class="line">        total_batch = int(data_len/batch_size)</span><br><span class="line">        # Loop over all batches</span><br><span class="line">        for i in range(total_batch):</span><br><span class="line">            if i == total_batch-1:</span><br><span class="line">                batch_xs = train_X[i*batch_size:data_len]</span><br><span class="line">                batch_ys = train_Y[i*batch_size:data_len]</span><br><span class="line">            else:</span><br><span class="line">                batch_xs = train_X[i*batch_size:(i+1)*batch_size]</span><br><span class="line">                batch_ys = train_Y[i*batch_size:(i+1)*batch_size]</span><br><span class="line"></span><br><span class="line">            # Run optimization op (backprop) and cost op (to get loss value)</span><br><span class="line">            _, c = sess.run([optimizer, cost], feed_dict=&#123;x: batch_xs,</span><br><span class="line">                                                          y: batch_ys&#125;)</span><br><span class="line">            # Compute average loss 平均cost</span><br><span class="line">            avg_cost += c / total_batch</span><br><span class="line"></span><br><span class="line">        # Display logs per epoch step</span><br><span class="line">        if (epoch+1) % display_step == 0:</span><br><span class="line">            print(&quot;Epoch:&quot;, &apos;%04d&apos; % (epoch+1), &quot;cost=&quot;, &quot;&#123;:.9f&#125;&quot;.format(avg_cost))</span><br><span class="line"></span><br><span class="line">    print(&quot;Optimization Finished!&quot;)</span><br><span class="line"></span><br><span class="line">    # Test model</span><br><span class="line">    correct_prediction = tf.equal(tf.argmax(pred, 1), tf.argmax(y, 1))</span><br><span class="line">    accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))</span><br><span class="line">    print(&quot;Accuracy:&quot;, accuracy.eval(&#123;x: test_X, y: test_Y&#125;))</span><br><span class="line"></span><br><span class="line">    # save model</span><br><span class="line">    saver.save(sess, &quot;D:\KAGGLE\Titanic\save\model.ckpt&quot;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#%%</span><br><span class="line"># 预测结果</span><br><span class="line">data = pd.read_csv(&quot;D:\\KAGGLE\\Titanic\\test.csv&quot;)</span><br><span class="line"></span><br><span class="line">data[&apos;Sex&apos;] = data[&apos;Sex&apos;].apply(lambda s:1 if s == &apos;male&apos; else 0)</span><br><span class="line">data[&apos;Age&apos;] = data.Age.fillna(data.Age.mean())</span><br><span class="line">data[&apos;Age&apos;] = MaxMinNormalization(data[&apos;Age&apos;])</span><br><span class="line">data[&apos;Fare&apos;] = MaxMinNormalization(data[&apos;Fare&apos;])</span><br><span class="line"></span><br><span class="line">data = data.join(pd.get_dummies(data.Embarked, prefix=&apos;Embarked&apos;))</span><br><span class="line"></span><br><span class="line">data_x = data.filter(regex=&apos;Pclass|Sex|Fare|Embarked_.*|Age|SibSp|Parch&apos;)</span><br><span class="line"></span><br><span class="line">with tf.Session() as sess:</span><br><span class="line">    # Run the initializer</span><br><span class="line">    sess.run(init)</span><br><span class="line">    # restore model</span><br><span class="line">    saver.restore(sess, &quot;D:\KAGGLE\Titanic\save\model.ckpt&quot;)</span><br><span class="line"></span><br><span class="line">    # Test model</span><br><span class="line">    prediction = sess.run(pred, feed_dict=&#123;x:data_x&#125;)</span><br><span class="line">    Survived = np.argmax(prediction, 1)</span><br><span class="line">    submission = pd.DataFrame(&#123;</span><br><span class="line">        &quot;PassengerId&quot;: data[&quot;PassengerId&quot;],</span><br><span class="line">        &quot;Survived&quot;: Survived</span><br><span class="line">    &#125;)</span><br><span class="line"></span><br><span class="line">    submission.to_csv(&quot;D:\\KAGGLE\\Titanic\\titanic_submission.csv&quot;, index=False)</span><br></pre></td></tr></table></figure>
       
     </div>
 
@@ -542,7 +475,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/C/" rel="tag"># C++</a>
+            <a href="/tags/tensorflow/" rel="tag"># tensorflow</a>
+          
+            <a href="/tags/kaggle/" rel="tag"># kaggle</a>
           
         </div>
       
@@ -555,8 +490,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/hello-world/" rel="next" title="Hello World">
-                <i class="fa fa-chevron-left"></i> Hello World
+              <a href="/post/TensorFlow-Examples-LOR/" rel="next" title="TensorFlow-Examples-LOR">
+                <i class="fa fa-chevron-left"></i> TensorFlow-Examples-LOR
               </a>
             
           </div>
@@ -565,8 +500,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/TensorFlow-Note/" rel="prev" title="TensorFlow Note">
-                TensorFlow Note <i class="fa fa-chevron-right"></i>
+              <a href="/post/TensorFlow-Examples-NN/" rel="prev" title="TensorFlow-Examples:nearest_neighbor">
+                TensorFlow-Examples:nearest_neighbor <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -616,17 +551,8 @@
       
 
       
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
-            Table of Contents
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
-            Overview
-          </li>
-        </ul>
-      
 
-      <div class="site-overview-wrap sidebar-panel">
+      <div class="site-overview-wrap sidebar-panel sidebar-panel-active">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
             
@@ -641,7 +567,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">9</span>
+                    <span class="site-state-item-count">11</span>
                     <span class="site-state-item-name">posts</span>
                   </a>
                 </div>
@@ -660,7 +586,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">3</span>
+                      
+                    
+                    <span class="site-state-item-count">4</span>
                     <span class="site-state-item-name">categories</span>
                   </a>
                 </div>
@@ -685,7 +613,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">6</span>
+                      
+                    
+                    <span class="site-state-item-count">7</span>
                     <span class="site-state-item-name">tags</span>
                   </a>
                 </div>
@@ -725,23 +655,6 @@
         </div>
       </div>
 
-      
-      <!--noindex-->
-        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-
-            
-            
-            
-            
-
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#C-11"><span class="nav-number">1.</span> <span class="nav-text">C++11</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#decltype"><span class="nav-number">1.1.</span> <span class="nav-text">decltype</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#引申：追踪返回类型"><span class="nav-number">1.1.1.</span> <span class="nav-text">引申：追踪返回类型</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#宏"><span class="nav-number">1.2.</span> <span class="nav-text">宏</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#char-amp-string"><span class="nav-number">1.3.</span> <span class="nav-text">char &amp; string</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#TRUNCATE"><span class="nav-number">1.3.1.</span> <span class="nav-text">_TRUNCATE</span></a></li></ol></li></ol></li></ol></div>
-            
-
-          </div>
-        </div>
-      <!--/noindex-->
       
 
       

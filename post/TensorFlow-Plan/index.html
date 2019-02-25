@@ -102,7 +102,7 @@
 <meta property="og:site_name" content="bon">
 <meta property="og:description" content="TensorFlow-Example从TensorFlow-Example上手TensorFlow和DL。">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2019-02-22T09:05:01.324Z">
+<meta property="og:updated_time" content="2019-02-25T09:18:15.714Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="TensorFlow-Plan">
 <meta name="twitter:description" content="TensorFlow-Example从TensorFlow-Example上手TensorFlow和DL。">
@@ -427,7 +427,7 @@
                 
                   <span class="post-meta-item-text">Edited on</span>
                 
-                <time title="Modified: 2019-02-22 17:05:01" itemprop="dateModified" datetime="2019-02-22T17:05:01+08:00">2019-02-22</time>
+                <time title="Modified: 2019-02-25 17:18:15" itemprop="dateModified" datetime="2019-02-25T17:18:15+08:00">2019-02-25</time>
               
             
           </span>
@@ -493,7 +493,12 @@
 <li style="list-style: none"><input type="checkbox" checked> TensorFlow 基本流程结构 (<a href="../TensorFlow-Note">及记录笔记</a>)</li>
 </ul>
 <h2 id="工具篇"><a href="#工具篇" class="headerlink" title="工具篇"></a>工具篇</h2><ul>
-<li style="list-style: none"><input type="checkbox"> 保存加载模型</li>
+<li style="list-style: none"><input type="checkbox" checked> 保存加载模型 (两句)<ul>
+<li>saver = tf.train.Saver()</li>
+<li>保存 save_path = saver.save(sess, model_path) </li>
+<li>加载 saver.restore(sess, model_path)  </li>
+</ul>
+</li>
 <li style="list-style: none"><input type="checkbox"> tensorboard_basic</li>
 <li style="list-style: none"><input type="checkbox"> tensorboard_advanced</li>
 </ul>
@@ -561,8 +566,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/post/TensorFlow-Examples-LOR/" rel="next" title="TensorFlow-Examples-LOR">
-                <i class="fa fa-chevron-left"></i> TensorFlow-Examples-LOR
+              <a href="/post/TensorFlow-Examples-NN/" rel="next" title="TensorFlow-Examples:nearest_neighbor">
+                <i class="fa fa-chevron-left"></i> TensorFlow-Examples:nearest_neighbor
               </a>
             
           </div>
@@ -643,7 +648,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">9</span>
+                    <span class="site-state-item-count">11</span>
                     <span class="site-state-item-name">posts</span>
                   </a>
                 </div>
@@ -689,7 +694,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">6</span>
+                      
+                    
+                    <span class="site-state-item-count">7</span>
                     <span class="site-state-item-name">tags</span>
                   </a>
                 </div>
