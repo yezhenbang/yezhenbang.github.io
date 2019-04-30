@@ -94,25 +94,25 @@
 
 
 
-  <meta name="description" content="TensorFlow study note #1.">
+  <meta name="description" content="从TensorFlow-Examples学习TensorFlow之：K-Means。">
 <meta name="keywords" content="tensorflow,python">
 <meta property="og:type" content="article">
-<meta property="og:title" content="TensorFlow Note">
-<meta property="og:url" content="https://yezhenbang.github.io/post/TensorFlow-Note/index.html">
+<meta property="og:title" content="TensorFlow Examples K-Means">
+<meta property="og:url" content="https://yezhenbang.github.io/post/TensorFlow-Examples-K-Means/index.html">
 <meta property="og:site_name" content="bon">
-<meta property="og:description" content="TensorFlow study note #1.">
+<meta property="og:description" content="从TensorFlow-Examples学习TensorFlow之：K-Means。">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2019-02-25T08:24:38.108Z">
+<meta property="og:updated_time" content="2019-04-16T09:37:21.194Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="TensorFlow Note">
-<meta name="twitter:description" content="TensorFlow study note #1.">
+<meta name="twitter:title" content="TensorFlow Examples K-Means">
+<meta name="twitter:description" content="从TensorFlow-Examples学习TensorFlow之：K-Means。">
 
 
 
 
 
 
-  <link rel="canonical" href="https://yezhenbang.github.io/post/TensorFlow-Note/">
+  <link rel="canonical" href="https://yezhenbang.github.io/post/TensorFlow-Examples-K-Means/">
 
 
 
@@ -122,7 +122,7 @@
   };
 </script>
 
-  <title>TensorFlow Note | bon</title>
+  <title>TensorFlow Examples K-Means | bon</title>
   
 
 
@@ -367,7 +367,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://yezhenbang.github.io/post/TensorFlow-Note/">
+    <link itemprop="mainEntityOfPage" href="https://yezhenbang.github.io/post/TensorFlow-Examples-K-Means/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Bon">
@@ -384,7 +384,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">TensorFlow Note
+          <h1 class="post-title" itemprop="name headline">TensorFlow Examples K-Means
 
               
             
@@ -410,7 +410,7 @@
                 
               
 
-              <time title="Created: 2019-02-15 13:33:10" itemprop="dateCreated datePublished" datetime="2019-02-15T13:33:10+08:00">2019-02-15</time>
+              <time title="Created: 2019-03-13 17:29:58" itemprop="dateCreated datePublished" datetime="2019-03-13T17:29:58+08:00">2019-03-13</time>
             
 
             
@@ -427,7 +427,7 @@
                 
                   <span class="post-meta-item-text">Edited on</span>
                 
-                <time title="Modified: 2019-02-25 16:24:38" itemprop="dateModified" datetime="2019-02-25T16:24:38+08:00">2019-02-25</time>
+                <time title="Modified: 2019-04-16 17:37:21" itemprop="dateModified" datetime="2019-04-16T17:37:21+08:00">2019-04-16</time>
               
             
           </span>
@@ -479,82 +479,30 @@
       
 
       
-        <p>TensorFlow study note #1.</p>
-<a id="more"></a>
-<h1 id="One-Basic"><a href="#One-Basic" class="headerlink" title="One | Basic"></a>One | Basic</h1><h2 id="Graph"><a href="#Graph" class="headerlink" title="Graph"></a><a href="https://www.tensorflow.org/api_docs/python/tf/Grap" title="tensorflow.org - Graph" target="_blank" rel="noopener">Graph</a></h2><blockquote>
-<p><a href="https://www.tensorflow.org/api_docs/python/tf/Grap" title="tensorflow.org - Graph" target="_blank" rel="noopener">A Graph contains a set of tf.Operation objects, which represent units of computation; and tf.Tensor objects, which represent the units of data that flow between operations.</a></p>
-</blockquote>
-<p><a href="https://www.tensorflow.org/api_docs/python/tf/Grap" title="tensorflow.org - Graph" target="_blank" rel="noopener">Graph</a>包含一系列操作(op)和张量(tensor，op输出的标识符)，是一系列计算过程的合集。TensorFlow全局有一默认Graph，不需要手动创建。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"># 在默认Graph下</span><br><span class="line">m1 = tf.constant([[3,5],[3,5]])</span><br><span class="line">m2 = tf.constant([[2,4],[2,4]])</span><br><span class="line">result = tf.add(m1,m2)</span><br><span class="line"></span><br><span class="line"># 创建新Graph g1</span><br><span class="line">g1 = tf.Graph()</span><br><span class="line">with g.as_default():</span><br><span class="line">  m3 = tf.constant(30)</span><br></pre></td></tr></table></figure>
-<p>代码中默认Graph可表示为下图：tensor为边表示输出，op为节点表示操作。<a href="">constant</a>和<a href="">add</a>是op，constant创建了张量m1和m2，add将m1和m2相加并产生新张量。但Graph只定义了如何操作，并不会真正执行。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">graph LR</span><br><span class="line">m1(m1) --&gt; add(add)</span><br><span class="line">m2(m2) --&gt; add</span><br></pre></td></tr></table></figure>
-<hr>
-<h2 id="Session"><a href="#Session" class="headerlink" title="Session"></a><a href="https://www.tensorflow.org/api_docs/python/tf/Session" title="tensorflow.org - session" target="_blank" rel="noopener">Session</a></h2><blockquote>
-<p><a href="https://www.tensorflow.org/api_docs/python/tf/Session" title="tensorflow.org - session" target="_blank" rel="noopener">A Session object encapsulates the environment in which Operation objects are executed, and Tensor objects are evaluated. </a></p>
-</blockquote>
-<p><a href="https://www.tensorflow.org/api_docs/python/tf/Session" title="tensorflow.org - session" target="_blank" rel="noopener">Session</a>对话是定义tensor和执行op的环境，在Session中可指定要执行的Graph中的op。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"># 默认Session使用默认Graph</span><br><span class="line">with tf.Session() as sess:</span><br><span class="line">    print(sess.run(result))   #输出： [[5 9] [5 9]]</span><br><span class="line"></span><br><span class="line"># 指定使用g1</span><br><span class="line">with tf.Session(graph=g1) as sess:</span><br><span class="line">    print(sess.run(m3))   #输出： 30</span><br><span class="line">    print(sess.run(m1))    #出错，g1中没有定义m1</span><br><span class="line"></span><br><span class="line"># placeholder 和 run(feed_dict=)</span><br><span class="line">a = tf.placeholder(tf.int16)</span><br><span class="line">b = tf.placeholder(tf.int16)</span><br><span class="line">add = tf.add(a, b)</span><br><span class="line"></span><br><span class="line">with tf.Session() as sess:</span><br><span class="line">    print(&quot;Addition with variables: %i&quot; % sess.run(add, feed_dict=&#123;a: 2, b: 3&#125;))</span><br></pre></td></tr></table></figure>
-<hr>
-<h2 id="Op"><a href="#Op" class="headerlink" title="Op"></a><a href="https://www.tensorflow.org/api_docs/python/tf/Operation" title="tensorflow.org - Op" target="_blank" rel="noopener">Op</a></h2><blockquote>
-<p><a href="https://www.tensorflow.org/api_docs/python/tf/Operation" title="tensorflow.org - Op" target="_blank" rel="noopener">An Operation is a node in a TensorFlow Graph that takes zero or more Tensor objects as input, and produces zero or more Tensor objects as output. </a></p>
-</blockquote>
-<p>Op是Graph的节点，输入tensor输出tensor。</p>
-<p><strong>以下收集op笔记</strong>：</p>
-<h3 id="tf-constant"><a href="#tf-constant" class="headerlink" title="tf.constant"></a><a href="https://www.tensorflow.org/api_docs/python/tf/constant" target="_blank" rel="noopener">tf.constant</a></h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">tensor = tf.constant([1, 2, 3]) =&gt; [1 2 3]</span><br><span class="line"></span><br><span class="line">tensor = tf.constant(-1.0, shape=[2, 3]) =&gt; [[-1. -1. -1.]</span><br><span class="line">                                             [-1. -1. -1.]]</span><br><span class="line"></span><br><span class="line">m = tf.constant([[1,2,3],[4,5,6]], shape=[3,3], verify_shape=True)   # Error: shape</span><br><span class="line"></span><br><span class="line">m = tf.constant([[1,2,3],[4,5,6]], shape=[3,3]) =&gt; [[1 2 3]</span><br><span class="line">                                                    [4 5 6]</span><br><span class="line">                                                    [6 6 6]]</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p><a href="https://www.cnblogs.com/jiaxblog/p/9054051.html" target="_blank" rel="noopener">tf.constant()是直接定义在graph里的，它是graph的一部分，会随着graph一起加载。如果通过tf.constant()定义了一个维度很高的张量，那么graph占用的内存就会变大，加载也会变慢。而tf.placeholder就没有这个问题，所以如果数据维度很高的话，定义成tf.placeholder是更好的选择。</a> –未求证</p>
-</blockquote>
-<h3 id="tf-placeholder"><a href="#tf-placeholder" class="headerlink" title="tf.placeholder"></a><a href="https://www.tensorflow.org/api_docs/python/tf/placeholder" title="tensorflow.org - placeholder" target="_blank" rel="noopener">tf.placeholder</a></h3><p>占位符，类似于声明。不指定shape可填充任意shape。</p>
-<blockquote>
-<p><a href="https://www.tensorflow.org/api_docs/python/tf/placeholder" title="tensorflow.org - placeholder" target="_blank" rel="noopener">Its value must be fed using the feed_dict optional argument to Session.run(), Tensor.eval(), or Operation.run().</a></p>
-<p>使用时必须用feed_dict选修填充数据。参考<a href="#session">session</a></p>
-</blockquote>
-<h3 id="reduce-sum"><a href="#reduce-sum" class="headerlink" title="reduce_sum"></a><a href="https://www.tensorflow.org/api_docs/python/tf/math/reduce_sum" title="tensorflow.org - reduce_sum" target="_blank" rel="noopener">reduce_sum</a></h3><p>通过求和降维。</p>
-<p>判断要降哪一维：若M的shape为(6,7,8)，即6<em>7</em>8的三维矩阵，则alis=0,1,2分别得到(7<em>8),(6</em>8),(6*7)的二维矩阵，alis=[1,2]则先把7去掉，再把8去掉，最终得到(6)的一维向量，若再alis=[1,2,0]则6也去掉，从向量变成一个点（一个数字）。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"># 官方例子</span><br><span class="line">x = tf.constant([[1, 1, 1], [1, 1, 1]])</span><br><span class="line">tf.reduce_sum(x)  # 6</span><br><span class="line">tf.reduce_sum(x, 0)  # [2, 2, 2]</span><br><span class="line">tf.reduce_sum(x, 1)  # [3, 3]</span><br><span class="line">tf.reduce_sum(x, 1, keepdims=True)  # [[3], [3]]</span><br><span class="line">tf.reduce_sum(x, [0, 1])  # 6</span><br></pre></td></tr></table></figure>
-<p>参数</p>
+        <p>从<a href="https://github.com/aymericdamien/TensorFlow-Examples/" target="_blank" rel="noopener">TensorFlow-Examples</a>学习TensorFlow之：K-Means。<a id="more"></a><a href="../TensorFlow-Plan">进度</a></p>
+<h1 id="BasicModels-K-Means-K均值聚类"><a href="#BasicModels-K-Means-K均值聚类" class="headerlink" title="BasicModels: K-Means K均值聚类"></a>BasicModels: K-Means K均值聚类</h1><p>kmeans计算步骤：</p>
 <ul>
-<li>alis(reduction_indices) - 要降低的维度，支持多个如[0,1] <code>The dimensions to reduce. If None (the default), reduces all dimensions. Must be in the range [-rank(input_tensor), rank(input_tensor)).</code></li>
-</ul>
-<h3 id="tf-nn-softmax"><a href="#tf-nn-softmax" class="headerlink" title="tf.nn.softmax"></a><a href="https://www.tensorflow.org/api_docs/python/tf/nn/softmax" target="_blank" rel="noopener">tf.nn.softmax</a></h3><p>归一化指数函数</p>
-<p>使得每一个元素的范围都在(0,1)之间，并且所有元素的和为1。</p>
-<hr>
-<h2 id="Tensor"><a href="#Tensor" class="headerlink" title="Tensor"></a><a href="https://www.tensorflow.org/api_docs/python/tf/Tensor" title="tensorflow.org - Tensor" target="_blank" rel="noopener">Tensor</a></h2><blockquote>
-<p>A <a href="https://www.tensorflow.org/api_docs/python/tf/Tensor" title="tensorflow.org - Tensor" target="_blank" rel="noopener">Tensor</a> is a symbolic handle to one of the outputs of an Operation. It does not hold the values of that operation’s output, but instead provides a means of computing those values in a TensorFlow tf.Session.</p>
-</blockquote>
-<p>Tensor是对操作输出的标识处理，它并不代表输出值的本身，而是为Session提供计算那些值的手段。就是标识符的意思吧…</p>
-<p><strong>以下收集tensor笔记</strong>：</p>
-<hr>
-<p><em>hint: 以下基本属于class，基于个人理解放在这一章。</em></p>
-<h3 id="tf-Variable"><a href="#tf-Variable" class="headerlink" title="tf.Variable"></a><a href="https://www.tensorflow.org/api_docs/python/tf/Variable" title="tensorflow.org - Variable" target="_blank" rel="noopener">tf.Variable</a></h3><blockquote>
-<p><a href="https://www.tensorflow.org/api_docs/python/tf/Variable" title="tensorflow.org - Variable" target="_blank" rel="noopener">A tf.Variable represents a tensor whose value can be changed by running ops on it. Unlike tf.Tensor objects, a tf.Variable exists outside the context of a single session.run call.</a></p>
-<p>Variable表示值可变的tensor，存在于session.run()上下文之外。 （意思是全局变量？）</p>
-</blockquote>
+<li><p>随机选取k个中心点</p>
+</li>
+<li><p>循环：</p>
 <ul>
-<li><p>创建 <code>W = tf.Variable(rng.randn(), name=&quot;weight&quot;)</code></p>
+<li><p>遍历所有数据，归类到最近的中心点，形成k个聚类</p>
 </li>
-<li><p>在session中使用前需 <code>sess.run(W.initializer)</code>或 <code>sess.run(tf.global_variables_initializer())</code>初始化值，会通过创建语句的值（这里是rng.randn()随机数）初始化变量。</p>
-</li>
-<li><p>trainable = default-True</p>
+<li><p>计算每个聚类中的均值，作为新的中心点</p>
 </li>
 </ul>
-<hr>
-<h2 id="Optimizer"><a href="#Optimizer" class="headerlink" title="Optimizer"></a><a href="https://www.tensorflow.org/api_docs/python/tf/train/Optimizer" title="tensorflow.org - Optimizer" target="_blank" rel="noopener">Optimizer</a></h2><blockquote>
-<p><a href="https://www.tensorflow.org/api_docs/python/tf/train/Optimizer" title="tensorflow.org - Optimizer" target="_blank" rel="noopener">This class defines the API to add Ops to train a model. </a></p>
-<p>优化器 基类，定义训练模型的接口和操作。</p>
-</blockquote>
-<p>补充资料：<a href="http://ruder.io/optimizing-gradient-descent/" target="_blank" rel="noopener">http://ruder.io/optimizing-gradient-descent/</a></p>
-<h3 id="GradientDescentOptimizer"><a href="#GradientDescentOptimizer" class="headerlink" title="GradientDescentOptimizer"></a><a href="https://www.tensorflow.org/api_docs/python/tf/train/GradientDescentOptimizer" title="tensorflow.org - GradientDescentOptimizer" target="_blank" rel="noopener">GradientDescentOptimizer</a></h3><p>梯度下降优化器 <code>tf.train.GradientDescentOptimizer</code></p>
-<p>Args:</p>
-<ul>
-<li>learning_rate: A Tensor or a floating point value. 学习率</li>
-<li>use_locking: If True use locks for update operations. 更新锁</li>
-<li>name: Optional name prefix for the operations created when applying gradients. Defaults to “GradientDescent”.</li>
+</li>
+<li><p>直到: k个中心点不再变化</p>
+</li>
 </ul>
-<blockquote>
-<p>.minimize() simply combines calls compute_gradients() and apply_gradients().</p>
-<p> minimize包括了compute_gradients()和apply_gradients().</p>
-</blockquote>
+<p>样例使用KMEANS工厂类建立图表，所以建表关键代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">kmeans = KMeans(inputs=X, num_clusters=k, distance_metric=&apos;cosine&apos;, use_mini_batch=True)</span><br><span class="line">training_graph = kmeans.training_graph()</span><br><span class="line">(all_scores, cluster_idx, scores, cluster_centers_initialized, init_op, train_op) = training_graph</span><br></pre></td></tr></table></figure>
+<hr>
+<p>样例代码 <a href="https://github.com/yezhenbang/TensorFlow-Examples/tree/parse" target="_blank" rel="noopener">kmeans.py</a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br></pre></td><td class="code"><pre><span class="line">from __future__ import print_function</span><br><span class="line"></span><br><span class="line">import numpy as np</span><br><span class="line">import tensorflow as tf</span><br><span class="line">from tensorflow.contrib.factorization import KMeans</span><br><span class="line"></span><br><span class="line"># Ignore all GPUs, tf k-means does not benefit from it.</span><br><span class="line">import os</span><br><span class="line">os.environ[&quot;CUDA_VISIBLE_DEVICES&quot;] = &quot;&quot;</span><br><span class="line"></span><br><span class="line"># Import MNIST data</span><br><span class="line">from tensorflow.examples.tutorials.mnist import input_data</span><br><span class="line">mnist = input_data.read_data_sets(&quot;/tmp/data/&quot;, one_hot=True)</span><br><span class="line">full_data_x = mnist.train.images</span><br><span class="line"></span><br><span class="line"># Parameters</span><br><span class="line">num_steps = 50 # Total steps to train 循环50次</span><br><span class="line">batch_size = 1024 # The number of samples per batch 无用</span><br><span class="line">k = 25 # The number of clusters 企图分出25个聚类</span><br><span class="line">num_classes = 10 # The 10 digits</span><br><span class="line">num_features = 784 # Each image is 28x28 pixels</span><br><span class="line"></span><br><span class="line"># Input images</span><br><span class="line">X = tf.placeholder(tf.float32, shape=[None, num_features])</span><br><span class="line"># Labels (for assigning a label to a centroid and testing)</span><br><span class="line">Y = tf.placeholder(tf.float32, shape=[None, num_classes])</span><br><span class="line"></span><br><span class="line"># K-Means Parameters</span><br><span class="line">kmeans = KMeans(inputs=X, num_clusters=k, distance_metric=&apos;cosine&apos;,</span><br><span class="line">                use_mini_batch=True)</span><br><span class="line"># KMeans class</span><br><span class="line"># __init__(</span><br><span class="line">#     inputs,               输入数据</span><br><span class="line">#     num_clusters,         分类数量</span><br><span class="line">#     initial_clusters=RANDOM_INIT,     初始中心点，可tensor、numpy指定、&quot;random&quot;、&quot;kmeans_plus_plus&quot;</span><br><span class="line">#           random 随机从输入抽取</span><br><span class="line">#     distance_metric=SQUARED_EUCLIDEAN_DISTANCE,   距离计算方式，Supported:&quot;squared_euclidean&quot;,&quot;cosine&quot;</span><br><span class="line">#     use_mini_batch=False,             对数据分块(batch)迭代，加快收敛，默认不开启，全数据迭代</span><br><span class="line">#     mini_batch_steps_per_iteration=1, （mini—batch模式下）多少次迭代后将子块训练数据更新到主副本（更新中心点）</span><br><span class="line">#     random_seed=0,                    随机化初始中心点的随机种子</span><br><span class="line">#     kmeans_plus_plus_num_retries=2,   （待深入）For each point that is sampled during kmeans++ initialization, this parameter specifies the number of additional points to draw from the current distribution before selecting the best. If a negative value is specified, a heuristic is used to sample O(log(num_to_sample)) additional points.</span><br><span class="line">#     kmc2_chain_length=200             （待深入）Determines how many candidate points are used by the k-MC2 algorithm to produce one new cluster centers. If a (mini-)batch contains less points, one new cluster center is generated from the (mini-)batch.</span><br><span class="line"># )</span><br><span class="line"></span><br><span class="line"># Build KMeans graph</span><br><span class="line"># 根据上面创建的KMEANS类的参数，training_graph()构造了k-means算法的graph，</span><br><span class="line"># 并返回各结点(tensor)。无需自己设计计算流程，真方便</span><br><span class="line">training_graph = kmeans.training_graph()</span><br><span class="line"># training_graph():</span><br><span class="line">#   return (all_scores, cluster_idx, scores, cluster_centers_initialized,</span><br><span class="line">#             init_op, training_op)</span><br><span class="line"># all_scores: 每个输入到每个聚类中心的距离矩阵 (len(X), k)</span><br><span class="line"># cluster_idx: 向量，对应每个输入最近的聚类中心id (len(X))，</span><br><span class="line"># scores: 向量，对应每个输入到最近的中心的距离 (len(X))</span><br><span class="line"># cluster_centers_initialized: 标量，中心是否已经初始化</span><br><span class="line"># init_op: 操作，初始化中心</span><br><span class="line"># training_op: 操作，训练</span><br><span class="line"></span><br><span class="line">if len(training_graph) &gt; 6: </span><br><span class="line">    (all_scores, cluster_idx, scores, cluster_centers_initialized,</span><br><span class="line">     cluster_centers_var, init_op, train_op) = training_graph</span><br><span class="line">else: #TensorFlow 1.13.1 从上面training_graph()的返回可以看到只有6个变量</span><br><span class="line">    (all_scores, cluster_idx, scores, cluster_centers_initialized,</span><br><span class="line">     init_op, train_op) = training_graph</span><br><span class="line"></span><br><span class="line">cluster_idx = cluster_idx[0] # fix for cluster_idx being a tuple</span><br><span class="line">avg_distance = tf.reduce_mean(scores)</span><br><span class="line"># scores的均值，用以表示整体匹配度</span><br><span class="line"></span><br><span class="line"># Initialize the variables (i.e. assign their default value)</span><br><span class="line">init_vars = tf.global_variables_initializer()</span><br><span class="line"></span><br><span class="line"># Start TensorFlow session</span><br><span class="line">sess = tf.Session()</span><br><span class="line"></span><br><span class="line"># Run the initializer</span><br><span class="line">sess.run(init_vars, feed_dict=&#123;X: full_data_x&#125;)</span><br><span class="line">sess.run(init_op, feed_dict=&#123;X: full_data_x&#125;)</span><br><span class="line"></span><br><span class="line"># Training</span><br><span class="line">for i in range(1, num_steps + 1):</span><br><span class="line">    _, d, idx = sess.run([train_op, avg_distance, cluster_idx],</span><br><span class="line">                         feed_dict=&#123;X: full_data_x&#125;)</span><br><span class="line">    if i % 10 == 0 or i == 1:</span><br><span class="line">        print(&quot;Step %i, Avg Distance: %f&quot; % (i, d))</span><br><span class="line"></span><br><span class="line"># Assign a label to each centroid</span><br><span class="line"># Count total number of labels per centroid, using the label of each training</span><br><span class="line"># sample to their closest centroid (given by &apos;idx&apos;)</span><br><span class="line"># counts 通过每个输入样例和样例输出，得到每个聚类中代表10个数字的次数统计 (k, 10)</span><br><span class="line">counts = np.zeros(shape=(k, num_classes))</span><br><span class="line">for i in range(len(idx)):</span><br><span class="line">    counts[idx[i]] += mnist.train.labels[i]</span><br><span class="line"># Assign the most frequent label to the centroid</span><br><span class="line"># labels_map 向量，每个聚类出现最多的数字，作为聚类预测结果 (k)</span><br><span class="line">labels_map = [np.argmax(c) for c in counts]</span><br><span class="line">labels_map = tf.convert_to_tensor(labels_map)</span><br><span class="line"></span><br><span class="line"># Evaluation ops</span><br><span class="line"># Lookup: centroid_id -&gt; label</span><br><span class="line"># embedding_lookup将cluster_idx每一个元素作为下标在labels_map中查找，获取其值</span><br><span class="line"># 根据labels_map，将cluster_idx从对应每个输入最近中心坐标，变成每个输入预测结果</span><br><span class="line">cluster_label = tf.nn.embedding_lookup(labels_map, cluster_idx)</span><br><span class="line"># Compute accuracy</span><br><span class="line"># 准确率计算</span><br><span class="line">correct_prediction = tf.equal(cluster_label, tf.cast(tf.argmax(Y, 1), tf.int32))</span><br><span class="line">accuracy_op = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))</span><br><span class="line"></span><br><span class="line"># Test Model</span><br><span class="line">test_x, test_y = mnist.test.images, mnist.test.labels</span><br><span class="line"># 计算测试用例，得到准确率</span><br><span class="line">print(&quot;Test Accuracy:&quot;, sess.run(accuracy_op, feed_dict=&#123;X: test_x, Y: test_y&#125;))</span><br></pre></td></tr></table></figure>
+<hr>
+<p>参考：</p>
+<p><a href="https://www.cnblogs.com/bourneli/p/3645049.html" target="_blank" rel="noopener">https://www.cnblogs.com/bourneli/p/3645049.html</a></p>
 
       
     </div>
@@ -593,8 +541,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/post/Note-C-skills/" rel="next" title="C++ skills record">
-                <i class="fa fa-chevron-left"></i> C++ skills record
+              <a href="/post/TensorFlow-Examples-NN/" rel="next" title="TensorFlow-Examples:nearest_neighbor">
+                <i class="fa fa-chevron-left"></i> TensorFlow-Examples:nearest_neighbor
               </a>
             
           </div>
@@ -603,8 +551,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/post/TensorFlow-Examples-LR/" rel="prev" title="TensorFlow-Examples:linear_regression">
-                TensorFlow-Examples:linear_regression <i class="fa fa-chevron-right"></i>
+              <a href="/post/zmirror-docker/" rel="prev" title="zmirror-docker">
+                zmirror-docker <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -778,7 +726,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#One-Basic"><span class="nav-number">1.</span> <span class="nav-text">One | Basic</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Graph"><span class="nav-number">1.1.</span> <span class="nav-text">Graph</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Session"><span class="nav-number">1.2.</span> <span class="nav-text">Session</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Op"><span class="nav-number">1.3.</span> <span class="nav-text">Op</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#tf-constant"><span class="nav-number">1.3.1.</span> <span class="nav-text">tf.constant</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#tf-placeholder"><span class="nav-number">1.3.2.</span> <span class="nav-text">tf.placeholder</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#reduce-sum"><span class="nav-number">1.3.3.</span> <span class="nav-text">reduce_sum</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#tf-nn-softmax"><span class="nav-number">1.3.4.</span> <span class="nav-text">tf.nn.softmax</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Tensor"><span class="nav-number">1.4.</span> <span class="nav-text">Tensor</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#tf-Variable"><span class="nav-number">1.4.1.</span> <span class="nav-text">tf.Variable</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Optimizer"><span class="nav-number">1.5.</span> <span class="nav-text">Optimizer</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#GradientDescentOptimizer"><span class="nav-number">1.5.1.</span> <span class="nav-text">GradientDescentOptimizer</span></a></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#BasicModels-K-Means-K均值聚类"><span class="nav-number">1.</span> <span class="nav-text">BasicModels: K-Means K均值聚类</span></a></li></ol></div>
             
 
           </div>
