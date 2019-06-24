@@ -29,13 +29,25 @@
     
     
     <entry>
-      <title>zmirror-docker</title>
-      <link href="/post/zmirror-docker/"/>
-      <url>/post/zmirror-docker/</url>
+      <title>C++ 字节对齐导致的地址越界</title>
+      <link href="/post/C-%E5%AD%97%E8%8A%82%E5%AF%B9%E9%BD%90%E5%AF%BC%E8%87%B4%E7%9A%84%E5%9C%B0%E5%9D%80%E8%B6%8A%E7%95%8C/"/>
+      <url>/post/C-%E5%AD%97%E8%8A%82%E5%AF%B9%E9%BD%90%E5%AF%BC%E8%87%B4%E7%9A%84%E5%9C%B0%E5%9D%80%E8%B6%8A%E7%95%8C/</url>
       
-        <content type="html"><![CDATA[<a id="more"></a><p>web@bon-PC:~$ mkdir docker-zmirror<br>web@bon-PC:~$ cd docker-zmirror/</p><p>web@bon-PC:~/docker-zmirror$ docker run -i -t ubuntu /bin/bash<br>docker: Got permission denied while trying to connect to the Docker daemon socket at unix:///var/run/docker.sock: Post http://%2Fvar%2Frun%2Fdocker.sock/v1.39/containers/create: dial unix /var/run/docker.sock: connect: permission denied.<br>See ‘docker run –help’.<br>web@bon-PC:~/docker-zmirror$ sudo docker run -i -t ubuntu /bin/bash</p><p>Status: Downloaded newer image for ubuntu:latest<br>root@376d92ab89b8:/#<br>root@376d92ab89b8:/# exit</p><p>web@bon-PC:~/docker-zmirror$ sudo docker commit -m=”new image” –author=”bon” 376d92ab89b8 zmirror:nul<br>l_test<br>sha256:1643298b15a381c9f5b911f23175a05ccb78581f232e89f12e012317b28bb5be<br>web@bon-PC:~/docker-zmirror$ docker inspect zmirror:null_test<br>[]<br>Got permission denied while trying to connect to the Docker daemon socket at unix:///var/run/docker.sock: Get http://%2Fvar%2Frun%2Fdocker.sock/v1.39/containers/zmirror:null_test/json: dial unix /var/run/docker.sock: connect: permission denied<br>web@bon-PC:~/docker-zmirror$ sudo docker inspect zmirror:null_test</p>]]></content>
+        <content type="html"><![CDATA[<p>由于类字节对齐不一致导致访问成员时地址错乱，造成访问越界等问题。<br><a id="more"></a></p><h2 id="表现及背景"><a href="#表现及背景" class="headerlink" title="表现及背景"></a>表现及背景</h2><p>将程序从32位升级64位后，程序内存访问越界；</p><p>将A类作为入参调用一个函数，进入函数后A的成员变量就完全乱了（最开始还以为是编译器优化导致的监视变量不成功）；进而引发的0xffff访问出错等一系列问题。</p><h2 id="过程"><a href="#过程" class="headerlink" title="过程"></a>过程</h2><p>升级64位时，程序中使用的32位变量地址转换可能会出现异常，参考<a href="https://blog.csdn.net/xt18971492243/article/details/80945195" target="_blank" rel="noopener">32位代码移植到64位需注意问题</a>等博客；但是分析了一波，出现异常时并没有在处理赋值、类型转换等操作，除非是调用函数时A的拷贝构造函数出错了，但是是引用传递，就算改为指针传递也出现同样问题。</p><p>进而猜测是编译器层面的错误，所以比较了64位和以前32位的项目属性设置，得不出结果，稍微留意了<code>/Zp 结构成员对齐</code>的设置，从默认改成了<code>16</code>和<code>8</code>，但依然出现问题（没有尝试<code>4</code>，不然可能可以更早发现问题）。</p><p><em>btw，根据<a href="https://docs.microsoft.com/zh-cn/cpp/build/reference/zp-struct-member-alignment?view=vs-2017" target="_blank" rel="noopener">MS官网</a>，<code>16</code>是64位程序的默认对齐，而<code>8</code>是32位的默认对齐，但实际上64位8个byte应该8字节对齐？而32位则应该是4？</em> </p><p>后来想看看指针传递过程中指针是不是变了，却发现A类指针没变，但里面某一个成员变量的地址却变了，偏移了4个字节；一下子有了方向，并且找到了一个情况类似的<a href="https://www.oschina.net/question/2323945_2279721" target="_blank" rel="noopener">全局对象成员地址改变的文章</a>；于是用文中提到的/d1 reportSingleClassLayoutA编译选项去看A的内存分布，果然发现了在编译不同的cpp时，出现了一个不一样的结果：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">1&gt;A.cpp</span><br><span class="line">1&gt;class Asize(1088):</span><br><span class="line">1&gt;+---</span><br><span class="line">1&gt; 0| Config config_</span><br><span class="line">1&gt;784| last_store_</span><br><span class="line">1&gt;788| is_tried_</span><br><span class="line">1&gt;  | &lt;alignment member&gt; (size=3)</span><br><span class="line">1&gt;792| blocking_threshold_</span><br><span class="line">1&gt;  | &lt;alignment member&gt; (size=4)          &lt;---多了4字节对齐</span><br><span class="line">1&gt;800| index_table_header</span><br><span class="line">......</span><br><span class="line">1&gt;960| result_table_header</span><br><span class="line"></span><br><span class="line">&gt;B.cpp</span><br><span class="line">1&gt;class Asize(1084):</span><br><span class="line">1&gt;+---</span><br><span class="line">1&gt; 0| Config config_</span><br><span class="line">1&gt;784| last_store_</span><br><span class="line">1&gt;788| is_tried_</span><br><span class="line">1&gt;  | &lt;alignment member&gt; (size=3)</span><br><span class="line">1&gt;792| blocking_threshold_</span><br><span class="line">1&gt;796| index_table_header</span><br><span class="line">......</span><br><span class="line">1&gt;956| result_table_header</span><br><span class="line">1&gt;+---</span><br></pre></td></tr></table></figure><p>在编译A.cpp时，编译器对Class A的内存对齐比B.cpp多了4字节的预留，导致后面的所有成员变量都偏移了，数据自然就不对了，取其中string成员的时候就发生了内存越界。</p><p>最后是在全局搜索<code>#pragma pack</code>发现了根本原因，在项目使用的一个三方库中，有一个头文件使用了<code>#pragma pack(1)</code>但最后却使用<code>#pragma pack(4)</code>而不是<code>#pragma pack()</code>恢复默认，导致B.cpp在引用该头文件之后编译的对齐方式都改变了，导致了这样的错误。而原来32位程序中，本来对齐方式就是4字节，因此没有出现问题.</p><h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>MS官网上的32位默认8字节对齐、64位默认16字节对齐是忽悠的。</p>]]></content>
       
       
+      <categories>
+          
+          <category> BUG </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> C++ </tag>
+            
+        </tags>
       
     </entry>
     

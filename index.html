@@ -542,7 +542,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://yezhenbang.github.io/post/zmirror-docker/">
+    <link itemprop="mainEntityOfPage" href="https://yezhenbang.github.io/post/C-字节对齐导致的地址越界/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Bon">
@@ -562,7 +562,7 @@
           <h1 class="post-title" itemprop="name headline">
                 
                 
-                <a href="/post/zmirror-docker/" class="post-title-link" itemprop="url">zmirror-docker</a>
+                <a href="/post/C-字节对齐导致的地址越界/" class="post-title-link" itemprop="url">C++ 字节对齐导致的地址越界</a>
               
             
           </h1>
@@ -587,7 +587,7 @@
                 
               
 
-              <time title="Created: 2019-04-16 17:39:11 / Modified: 17:57:13" itemprop="dateCreated datePublished" datetime="2019-04-16T17:39:11+08:00">2019-04-16</time>
+              <time title="Created: 2019-06-24 10:12:06 / Modified: 13:47:20" itemprop="dateCreated datePublished" datetime="2019-06-24T10:12:06+08:00">2019-06-24</time>
             
 
             
@@ -597,6 +597,24 @@
             
           </span>
 
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/BUG/" itemprop="url" rel="index"><span itemprop="name">BUG</span></a></span>
+
+                
+                
+              
+            </span>
           
 
           
@@ -627,17 +645,19 @@
 
       
         
+          <p>由于类字节对齐不一致导致访问成员时地址错乱，造成访问越界等问题。<br>
+          <!--noindex-->
           
-            <a id="more"></a>
-<p>web@bon-PC:~$ mkdir docker-zmirror<br>web@bon-PC:~$ cd docker-zmirror/</p>
-<p>web@bon-PC:~/docker-zmirror$ docker run -i -t ubuntu /bin/bash<br>docker: Got permission denied while trying to connect to the Docker daemon socket at unix:///var/run/docker.sock: Post http://%2Fvar%2Frun%2Fdocker.sock/v1.39/containers/create: dial unix /var/run/docker.sock: connect: permission denied.<br>See ‘docker run –help’.<br>web@bon-PC:~/docker-zmirror$ sudo docker run -i -t ubuntu /bin/bash</p>
-<p>Status: Downloaded newer image for ubuntu:latest<br>root@376d92ab89b8:/#<br>root@376d92ab89b8:/# exit</p>
-<p>web@bon-PC:~/docker-zmirror$ sudo docker commit -m=”new image” –author=”bon” 376d92ab89b8 zmirror:nul<br>l_test<br>sha256:1643298b15a381c9f5b911f23175a05ccb78581f232e89f12e012317b28bb5be<br>web@bon-PC:~/docker-zmirror$ docker inspect zmirror:null_test<br>[]<br>Got permission denied while trying to connect to the Docker daemon socket at unix:///var/run/docker.sock: Get http://%2Fvar%2Frun%2Fdocker.sock/v1.39/containers/zmirror:null_test/json: dial unix /var/run/docker.sock: connect: permission denied<br>web@bon-PC:~/docker-zmirror$ sudo docker inspect zmirror:null_test</p>
-
+            <div class="post-button text-center">
+              <a class="btn" href="/post/C-字节对齐导致的地址越界/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
           
+          <!--/noindex-->
         
       
-    </div>
+    </p></div>
 
     
 
@@ -2144,7 +2164,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">4</span>
+                      
+                    
+                    <span class="site-state-item-count">5</span>
                     <span class="site-state-item-name">categories</span>
                   </a>
                 </div>
