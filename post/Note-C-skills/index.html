@@ -102,7 +102,7 @@
 <meta property="og:site_name" content="bon">
 <meta property="og:description" content="Note from daily use.">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2019-02-22T06:32:02.977Z">
+<meta property="og:updated_time" content="2019-11-05T09:03:05.902Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="C++ skills record">
 <meta name="twitter:description" content="Note from daily use.">
@@ -427,7 +427,7 @@
                 
                   <span class="post-meta-item-text">Edited on</span>
                 
-                <time title="Modified: 2019-02-22 14:32:02" itemprop="dateModified" datetime="2019-02-22T14:32:02+08:00">2019-02-22</time>
+                <time title="Modified: 2019-11-05 17:03:05" itemprop="dateModified" datetime="2019-11-05T17:03:05+08:00">2019-11-05</time>
               
             
           </span>
@@ -481,10 +481,23 @@
       
         <p>Note from daily use.</p>
 <a id="more"></a>
-<h1 id="C-11"><a href="#C-11" class="headerlink" title="C++11"></a>C++11</h1><h2 id="decltype"><a href="#decltype" class="headerlink" title="decltype"></a>decltype</h2><p>字面意思类型获取，可通过表达式分析出结果类型。</p>
+<h1 id="C-11"><a href="#C-11" class="headerlink" title="C++11"></a>C++11</h1><h2 id="move"><a href="#move" class="headerlink" title="move"></a>move</h2><blockquote>
+<p><a href="https://en.cppreference.com/w/cpp/utility/move" target="_blank" rel="noopener">std::move</a> is used to indicate that an object t may be “moved from”, i.e. allowing the efficient transfer of resources from t to another object. In particular, std::move produces an <a href="https://en.cppreference.com/w/cpp/language/value_category" target="_blank" rel="noopener">xvalue</a> expression that identifies its argument t. It is exactly equivalent to a static_cast to an rvalue reference type.</p>
+</blockquote>
+<p>move()声明对象为亡值，效果与用static_cast将对象强制转换为右值引用一样，但实际上没有对对象的内存进行操作。配合移动构造函数可以加快对象的拷贝，实用例子swap():</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">T swap(T&amp; a, T&amp; b) &#123;</span><br><span class="line">    T tmp = a;      //拷贝构造了一次a</span><br><span class="line">    a = b;          //拷贝构造了一次b</span><br><span class="line">    b = tmp;        //再拷贝构造一次a</span><br><span class="line">&#125;</span><br><span class="line">T move_swap(T&amp; a, T&amp; b) &#123;</span><br><span class="line">    T tmp(std::move(a));    //移动构造a</span><br><span class="line">    a = std::move(b);       //移动赋值b</span><br><span class="line">    b = std::move(tmp);     //移动赋值a</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>视T成员变量对移动构造/赋值的支持，甚至可以无额外空间消耗完成交换。</p>
+<h2 id="decltype"><a href="#decltype" class="headerlink" title="decltype"></a>decltype</h2><p>字面意思类型获取，可通过表达式分析出结果类型。</p>
 <p>参考：<a href="https://www.cnblogs.com/cauchy007/p/4966485.html" target="_blank" rel="noopener">https://www.cnblogs.com/cauchy007/p/4966485.html</a></p>
 <h3 id="引申：追踪返回类型"><a href="#引申：追踪返回类型" class="headerlink" title="引申：追踪返回类型"></a>引申：追踪返回类型</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">template &lt;typename T1, typename T2&gt;</span><br><span class="line">auto sum(T1&amp; t1, T2&amp; t2) -&gt; decltype(t1 + t2) &#123;</span><br><span class="line">    return t1 + t2;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>编译通过，执行时根据<code>decltype(t1 + t2)</code>判断类型，结合auto实现自动判断函数返回类型。</p>
+<h2 id="constexpr常量表达式"><a href="#constexpr常量表达式" class="headerlink" title="constexpr常量表达式"></a>constexpr常量表达式</h2><blockquote>
+<p><a href="https://en.cppreference.com/w/cpp/language/constexpr" target="_blank" rel="noopener">Constexpr</a> specifies that the value of a variable or function <strong>can appear in constant expressions</strong>. The constexpr specifier declares that it is possible to evaluate the value of the function or variable at compile time. </p>
+</blockquote>
+<h3 id="修饰对象"><a href="#修饰对象" class="headerlink" title="修饰对象"></a>修饰对象</h3><p>const 确保对象声明后不被修改，可能是编译期常量（编译器优化）或者运行时常量；<br>constexpr 确保对象在编译期就已经确定的常量；限定基本类型和有constexpr构造函数的对象。</p>
+<p>所以用来表示编译器常量时，两者效果一样；但constexpr总能用于定义数组长度等需要编译期常量的地方；</p>
+<h3 id="修饰函数"><a href="#修饰函数" class="headerlink" title="修饰函数"></a>修饰函数</h3><p>const 只能修饰非静态类成员函数，确保该函数不会修改对象非静态成员变量；<br>constexpr 能修饰成员函数和普通函数，确保函数可以在编译期得出结果，但同时也能在运行时调用。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">constexpr int func(int n) &#123;     //  constexpr 函数</span><br><span class="line">		return n * 2;</span><br><span class="line">	&#125;</span><br><span class="line">int i = func(3);</span><br><span class="line">const int a1 = func(3);         //OK，优化为编译期常量</span><br><span class="line">const int a2 = func(i);         //OK, i不是编译期常量，所以是运行时常量</span><br><span class="line">constexpr int b1 = func(3);     //OK</span><br><span class="line">constexpr int b2 = func(a1);    //OK</span><br><span class="line">constexpr int b3 = func(i);     //ERROR，i不是编译期常量，func(i)运行时才有结果</span><br></pre></td></tr></table></figure>
 <hr>
 <p># </p>
 <h2 id="宏"><a href="#宏" class="headerlink" title="宏"></a>宏</h2><ul>
@@ -742,7 +755,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#C-11"><span class="nav-number">1.</span> <span class="nav-text">C++11</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#decltype"><span class="nav-number">1.1.</span> <span class="nav-text">decltype</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#引申：追踪返回类型"><span class="nav-number">1.1.1.</span> <span class="nav-text">引申：追踪返回类型</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#宏"><span class="nav-number">1.2.</span> <span class="nav-text">宏</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#char-amp-string"><span class="nav-number">1.3.</span> <span class="nav-text">char &amp; string</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#TRUNCATE"><span class="nav-number">1.3.1.</span> <span class="nav-text">_TRUNCATE</span></a></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#C-11"><span class="nav-number">1.</span> <span class="nav-text">C++11</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#move"><span class="nav-number">1.1.</span> <span class="nav-text">move</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#decltype"><span class="nav-number">1.2.</span> <span class="nav-text">decltype</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#引申：追踪返回类型"><span class="nav-number">1.2.1.</span> <span class="nav-text">引申：追踪返回类型</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#constexpr常量表达式"><span class="nav-number">1.3.</span> <span class="nav-text">constexpr常量表达式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#修饰对象"><span class="nav-number">1.3.1.</span> <span class="nav-text">修饰对象</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#修饰函数"><span class="nav-number">1.3.2.</span> <span class="nav-text">修饰函数</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#宏"><span class="nav-number">1.4.</span> <span class="nav-text">宏</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#char-amp-string"><span class="nav-number">1.5.</span> <span class="nav-text">char &amp; string</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#TRUNCATE"><span class="nav-number">1.5.1.</span> <span class="nav-text">_TRUNCATE</span></a></li></ol></li></ol></li></ol></div>
             
 
           </div>
