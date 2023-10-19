@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.0.0-rc1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha256-CTSx/A06dm1B063156EVh15m6Y67pAjZZaQc89LLSrU=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"yezhenbang.github.io","root":"/","images":"/images","scheme":"Mist","darkmode":false,"version":"8.18.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},"copycode":{"enable":true,"style":null,"show_result":true},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":false,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="从TensorFlow-Examples学习TensorFlow之：K-Means。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="TensorFlow Examples K-Means">
+<meta property="og:url" content="https://yezhenbang.github.io/post/TensorFlow-Examples-K-Means/index.html">
+<meta property="og:site_name" content="bon">
+<meta property="og:description" content="从TensorFlow-Examples学习TensorFlow之：K-Means。">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2019-03-13T09:29:58.000Z">
+<meta property="article:modified_time" content="2023-10-19T06:42:31.700Z">
+<meta property="article:author" content="Bon">
+<meta property="article:tag" content="tensorflow">
+<meta property="article:tag" content="python">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://yezhenbang.github.io/post/TensorFlow-Examples-K-Means/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://yezhenbang.github.io/post/TensorFlow-Examples-K-Means/","path":"post/TensorFlow-Examples-K-Means/","title":"TensorFlow Examples K-Means"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>TensorFlow Examples K-Means | bon</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">bon</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="home fa-fw"></i>Home</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="archive fa-fw"></i>Archives</a></li><li class="menu-item menu-item-ex"><a href="http://47.102.106.240:8080/" rel="section" target="_blank"><i class="user fa-fw"></i>Ex</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#BasicModels-K-Means-K%E5%9D%87%E5%80%BC%E8%81%9A%E7%B1%BB"><span class="nav-number">1.</span> <span class="nav-text">BasicModels: K-Means K均值聚类</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Bon</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">20</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/yezhenbang" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;yezhenbang" rel="noopener me" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://yezhenbang.github.io/post/TensorFlow-Examples-K-Means/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Bon">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="bon">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="TensorFlow Examples K-Means | bon">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          TensorFlow Examples K-Means
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2019-03-13 17:29:58" itemprop="dateCreated datePublished" datetime="2019-03-13T17:29:58+08:00">2019-03-13</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2023-10-19 14:42:31" itemprop="dateModified" datetime="2023-10-19T14:42:31+08:00">2023-10-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/tensorflow/" itemprop="url" rel="index"><span itemprop="name">tensorflow</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>从<a href="https://github.com/aymericdamien/TensorFlow-Examples/">TensorFlow-Examples</a>学习TensorFlow之：K-Means。<span id="more"></span><a href="../TensorFlow-Plan">进度</a></p>
+<h1 id="BasicModels-K-Means-K均值聚类"><a href="#BasicModels-K-Means-K均值聚类" class="headerlink" title="BasicModels: K-Means K均值聚类"></a>BasicModels: K-Means K均值聚类</h1><p>kmeans计算步骤：</p>
+<ul>
+<li><p>随机选取k个中心点</p>
+</li>
+<li><p>循环：</p>
+<ul>
+<li><p>遍历所有数据，归类到最近的中心点，形成k个聚类</p>
+</li>
+<li><p>计算每个聚类中的均值，作为新的中心点</p>
+</li>
+</ul>
+</li>
+<li><p>直到: k个中心点不再变化</p>
+</li>
+</ul>
+<p>样例使用KMEANS工厂类建立图表，所以建表关键代码如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">kmeans = KMeans(inputs=X, num_clusters=k, distance_metric=&#x27;cosine&#x27;, use_mini_batch=True)</span><br><span class="line">training_graph = kmeans.training_graph()</span><br><span class="line">(all_scores, cluster_idx, scores, cluster_centers_initialized, init_op, train_op) = training_graph</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>样例代码 <a href="https://github.com/yezhenbang/TensorFlow-Examples/tree/parse">kmeans.py</a></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br></pre></td><td class="code"><pre><span class="line">from __future__ import print_function</span><br><span class="line"></span><br><span class="line">import numpy as np</span><br><span class="line">import tensorflow as tf</span><br><span class="line">from tensorflow.contrib.factorization import KMeans</span><br><span class="line"></span><br><span class="line"># Ignore all GPUs, tf k-means does not benefit from it.</span><br><span class="line">import os</span><br><span class="line">os.environ[&quot;CUDA_VISIBLE_DEVICES&quot;] = &quot;&quot;</span><br><span class="line"></span><br><span class="line"># Import MNIST data</span><br><span class="line">from tensorflow.examples.tutorials.mnist import input_data</span><br><span class="line">mnist = input_data.read_data_sets(&quot;/tmp/data/&quot;, one_hot=True)</span><br><span class="line">full_data_x = mnist.train.images</span><br><span class="line"></span><br><span class="line"># Parameters</span><br><span class="line">num_steps = 50 # Total steps to train 循环50次</span><br><span class="line">batch_size = 1024 # The number of samples per batch 无用</span><br><span class="line">k = 25 # The number of clusters 企图分出25个聚类</span><br><span class="line">num_classes = 10 # The 10 digits</span><br><span class="line">num_features = 784 # Each image is 28x28 pixels</span><br><span class="line"></span><br><span class="line"># Input images</span><br><span class="line">X = tf.placeholder(tf.float32, shape=[None, num_features])</span><br><span class="line"># Labels (for assigning a label to a centroid and testing)</span><br><span class="line">Y = tf.placeholder(tf.float32, shape=[None, num_classes])</span><br><span class="line"></span><br><span class="line"># K-Means Parameters</span><br><span class="line">kmeans = KMeans(inputs=X, num_clusters=k, distance_metric=&#x27;cosine&#x27;,</span><br><span class="line">                use_mini_batch=True)</span><br><span class="line"># KMeans class</span><br><span class="line"># __init__(</span><br><span class="line">#     inputs,               输入数据</span><br><span class="line">#     num_clusters,         分类数量</span><br><span class="line">#     initial_clusters=RANDOM_INIT,     初始中心点，可tensor、numpy指定、&quot;random&quot;、&quot;kmeans_plus_plus&quot;</span><br><span class="line">#           random 随机从输入抽取</span><br><span class="line">#     distance_metric=SQUARED_EUCLIDEAN_DISTANCE,   距离计算方式，Supported:&quot;squared_euclidean&quot;,&quot;cosine&quot;</span><br><span class="line">#     use_mini_batch=False,             对数据分块(batch)迭代，加快收敛，默认不开启，全数据迭代</span><br><span class="line">#     mini_batch_steps_per_iteration=1, （mini—batch模式下）多少次迭代后将子块训练数据更新到主副本（更新中心点）</span><br><span class="line">#     random_seed=0,                    随机化初始中心点的随机种子</span><br><span class="line">#     kmeans_plus_plus_num_retries=2,   （待深入）For each point that is sampled during kmeans++ initialization, this parameter specifies the number of additional points to draw from the current distribution before selecting the best. If a negative value is specified, a heuristic is used to sample O(log(num_to_sample)) additional points.</span><br><span class="line">#     kmc2_chain_length=200             （待深入）Determines how many candidate points are used by the k-MC2 algorithm to produce one new cluster centers. If a (mini-)batch contains less points, one new cluster center is generated from the (mini-)batch.</span><br><span class="line"># )</span><br><span class="line"></span><br><span class="line"># Build KMeans graph</span><br><span class="line"># 根据上面创建的KMEANS类的参数，training_graph()构造了k-means算法的graph，</span><br><span class="line"># 并返回各结点(tensor)。无需自己设计计算流程，真方便</span><br><span class="line">training_graph = kmeans.training_graph()</span><br><span class="line"># training_graph():</span><br><span class="line">#   return (all_scores, cluster_idx, scores, cluster_centers_initialized,</span><br><span class="line">#             init_op, training_op)</span><br><span class="line"># all_scores: 每个输入到每个聚类中心的距离矩阵 (len(X), k)</span><br><span class="line"># cluster_idx: 向量，对应每个输入最近的聚类中心id (len(X))，</span><br><span class="line"># scores: 向量，对应每个输入到最近的中心的距离 (len(X))</span><br><span class="line"># cluster_centers_initialized: 标量，中心是否已经初始化</span><br><span class="line"># init_op: 操作，初始化中心</span><br><span class="line"># training_op: 操作，训练</span><br><span class="line"></span><br><span class="line">if len(training_graph) &gt; 6: </span><br><span class="line">    (all_scores, cluster_idx, scores, cluster_centers_initialized,</span><br><span class="line">     cluster_centers_var, init_op, train_op) = training_graph</span><br><span class="line">else: #TensorFlow 1.13.1 从上面training_graph()的返回可以看到只有6个变量</span><br><span class="line">    (all_scores, cluster_idx, scores, cluster_centers_initialized,</span><br><span class="line">     init_op, train_op) = training_graph</span><br><span class="line"></span><br><span class="line">cluster_idx = cluster_idx[0] # fix for cluster_idx being a tuple</span><br><span class="line">avg_distance = tf.reduce_mean(scores)</span><br><span class="line"># scores的均值，用以表示整体匹配度</span><br><span class="line"></span><br><span class="line"># Initialize the variables (i.e. assign their default value)</span><br><span class="line">init_vars = tf.global_variables_initializer()</span><br><span class="line"></span><br><span class="line"># Start TensorFlow session</span><br><span class="line">sess = tf.Session()</span><br><span class="line"></span><br><span class="line"># Run the initializer</span><br><span class="line">sess.run(init_vars, feed_dict=&#123;X: full_data_x&#125;)</span><br><span class="line">sess.run(init_op, feed_dict=&#123;X: full_data_x&#125;)</span><br><span class="line"></span><br><span class="line"># Training</span><br><span class="line">for i in range(1, num_steps + 1):</span><br><span class="line">    _, d, idx = sess.run([train_op, avg_distance, cluster_idx],</span><br><span class="line">                         feed_dict=&#123;X: full_data_x&#125;)</span><br><span class="line">    if i % 10 == 0 or i == 1:</span><br><span class="line">        print(&quot;Step %i, Avg Distance: %f&quot; % (i, d))</span><br><span class="line"></span><br><span class="line"># Assign a label to each centroid</span><br><span class="line"># Count total number of labels per centroid, using the label of each training</span><br><span class="line"># sample to their closest centroid (given by &#x27;idx&#x27;)</span><br><span class="line"># counts 通过每个输入样例和样例输出，得到每个聚类中代表10个数字的次数统计 (k, 10)</span><br><span class="line">counts = np.zeros(shape=(k, num_classes))</span><br><span class="line">for i in range(len(idx)):</span><br><span class="line">    counts[idx[i]] += mnist.train.labels[i]</span><br><span class="line"># Assign the most frequent label to the centroid</span><br><span class="line"># labels_map 向量，每个聚类出现最多的数字，作为聚类预测结果 (k)</span><br><span class="line">labels_map = [np.argmax(c) for c in counts]</span><br><span class="line">labels_map = tf.convert_to_tensor(labels_map)</span><br><span class="line"></span><br><span class="line"># Evaluation ops</span><br><span class="line"># Lookup: centroid_id -&gt; label</span><br><span class="line"># embedding_lookup将cluster_idx每一个元素作为下标在labels_map中查找，获取其值</span><br><span class="line"># 根据labels_map，将cluster_idx从对应每个输入最近中心坐标，变成每个输入预测结果</span><br><span class="line">cluster_label = tf.nn.embedding_lookup(labels_map, cluster_idx)</span><br><span class="line"># Compute accuracy</span><br><span class="line"># 准确率计算</span><br><span class="line">correct_prediction = tf.equal(cluster_label, tf.cast(tf.argmax(Y, 1), tf.int32))</span><br><span class="line">accuracy_op = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))</span><br><span class="line"></span><br><span class="line"># Test Model</span><br><span class="line">test_x, test_y = mnist.test.images, mnist.test.labels</span><br><span class="line"># 计算测试用例，得到准确率</span><br><span class="line">print(&quot;Test Accuracy:&quot;, sess.run(accuracy_op, feed_dict=&#123;X: test_x, Y: test_y&#125;))</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+<hr>
+<p>参考：</p>
+<p><a href="https://www.cnblogs.com/bourneli/p/3645049.html">https://www.cnblogs.com/bourneli/p/3645049.html</a></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/tensorflow/" rel="tag"># tensorflow</a>
+              <a href="/tags/python/" rel="tag"># python</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/post/TensorFlow-Examples-NN/" rel="prev" title="TensorFlow-Examples:nearest_neighbor">
+                  <i class="fa fa-angle-left"></i> TensorFlow-Examples:nearest_neighbor
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/post/C-%E5%AD%97%E8%8A%82%E5%AF%B9%E9%BD%90%E5%AF%BC%E8%87%B4%E7%9A%84%E5%9C%B0%E5%9D%80%E8%B6%8A%E7%95%8C/" rel="next" title="C++ 字节对齐导致的地址越界">
+                  C++ 字节对齐导致的地址越界 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments gitalk-container"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2023</span>
+    <span class="with-love">
+      <i class="user"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Bon</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/mist/" rel="noopener" target="_blank">NexT.Mist</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/gitalk/1.8.0/gitalk.css" integrity="sha256-AJnUHL7dBv6PGaeyPQJcgQPDjt/Hn/PvYZde1iqfp8U=" crossorigin="anonymous">
+
+<script class="next-config" data-name="gitalk" type="application/json">{"enable":true,"github_id":"yezhenbang","repo":"yezhenbang.github.io","client_id":"262d1fe0ae8ea70809f1","client_secret":"248d4ca388eac2a7e04d45d9e76e5e810c9b77a7","admin_user":"yezhenbang","distraction_free_mode":true,"proxy":"https://cors-anywhere.azm.workers.dev/https://github.com/login/oauth/access_token","language":null,"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/gitalk/1.8.0/gitalk.min.js","integrity":"sha256-MVK9MGD/XJaGyIghSVrONSnoXoGh3IFxLw0zfvzpxR4="},"path_md5":"e2b021a26d755563a2e52f06db552d10"}</script>
+<script src="/js/third-party/comments/gitalk.js"></script>
+
+</body>
+</html>

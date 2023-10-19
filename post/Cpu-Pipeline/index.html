@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.0.0-rc1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha256-CTSx/A06dm1B063156EVh15m6Y67pAjZZaQc89LLSrU=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"yezhenbang.github.io","root":"/","images":"/images","scheme":"Mist","darkmode":false,"version":"8.18.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},"copycode":{"enable":true,"style":null,"show_result":true},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":false,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="背景CPU组成：控制器CU（Control Unit）：指令寄存器IR(InstructionRegister)、程序计数器PC(ProgramCounter)、操作控制器OC(OperationController)；算数逻辑运算单元ALU；寄存器。 指令流水线（Instruction pipeline）：计算机指令在CPU内部会会被转译成一个或多个微指令（uop），这些uop在不同的cpu模块">
+<meta property="og:type" content="article">
+<meta property="og:title" content="分支预测损耗分析">
+<meta property="og:url" content="https://yezhenbang.github.io/post/Cpu-Pipeline/index.html">
+<meta property="og:site_name" content="bon">
+<meta property="og:description" content="背景CPU组成：控制器CU（Control Unit）：指令寄存器IR(InstructionRegister)、程序计数器PC(ProgramCounter)、操作控制器OC(OperationController)；算数逻辑运算单元ALU；寄存器。 指令流水线（Instruction pipeline）：计算机指令在CPU内部会会被转译成一个或多个微指令（uop），这些uop在不同的cpu模块">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://yezhenbang.github.io/images/Cpu-Pipeline/3LevelCpuArchitecture.png">
+<meta property="og:image" content="https://yezhenbang.github.io/images/Cpu-Pipeline/PipelineNormal.png">
+<meta property="og:image" content="https://yezhenbang.github.io/images/Cpu-Pipeline/PipelineDelay.png">
+<meta property="og:image" content="https://yezhenbang.github.io/images/Cpu-Pipeline/PipelinePredFault.png">
+<meta property="article:published_time" content="2023-04-28T09:41:57.000Z">
+<meta property="article:modified_time" content="2023-10-19T07:38:33.140Z">
+<meta property="article:author" content="Bon">
+<meta property="article:tag" content="C++">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://yezhenbang.github.io/images/Cpu-Pipeline/3LevelCpuArchitecture.png">
+
+
+<link rel="canonical" href="https://yezhenbang.github.io/post/Cpu-Pipeline/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://yezhenbang.github.io/post/Cpu-Pipeline/","path":"post/Cpu-Pipeline/","title":"分支预测损耗分析"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>分支预测损耗分析 | bon</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">bon</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="home fa-fw"></i>Home</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="archive fa-fw"></i>Archives</a></li><li class="menu-item menu-item-ex"><a href="http://47.102.106.240:8080/" rel="section" target="_blank"><i class="user fa-fw"></i>Ex</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%83%8C%E6%99%AF"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%86%E6%94%AF%E9%A2%84%E6%B5%8B"><span class="nav-number">2.</span> <span class="nav-text">分支预测</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%86%E6%94%AF%E9%A2%84%E6%B5%8B%E9%94%99%E8%AF%AF%E6%88%90%E6%9C%AC"><span class="nav-number">3.</span> <span class="nav-text">分支预测错误成本</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%86%E6%94%AF%E9%A2%84%E6%B5%8B%E5%99%A8"><span class="nav-number">4.</span> <span class="nav-text">分支预测器</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#C-%E5%85%B3%E9%94%AE%E5%AD%97-builtin-expect"><span class="nav-number">5.</span> <span class="nav-text">C++关键字 __builtin_expect</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#REFER"><span class="nav-number">6.</span> <span class="nav-text">REFER</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Bon</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">20</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/yezhenbang" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;yezhenbang" rel="noopener me" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://yezhenbang.github.io/post/Cpu-Pipeline/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Bon">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="bon">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="分支预测损耗分析 | bon">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          分支预测损耗分析
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2023-04-28 17:41:57" itemprop="dateCreated datePublished" datetime="2023-04-28T17:41:57+08:00">2023-04-28</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2023-10-19 15:38:33" itemprop="dateModified" datetime="2023-10-19T15:38:33+08:00">2023-10-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/" itemprop="url" rel="index"><span itemprop="name">性能优化</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p><strong>CPU组成</strong>：控制器CU（Control Unit）：指令寄存器IR(InstructionRegister)、程序计数器PC(ProgramCounter)、操作控制器OC(OperationController)；算数逻辑运算单元ALU；寄存器。</p>
+<p><strong>指令流水线</strong>（Instruction pipeline）：计算机指令在CPU内部会会被转译成一个或多个微指令（uop），这些uop在不同的cpu模块中依次执行。如果CPU一次处理一个指令，那么某个模块在执行时，其他模块都处于空闲状态，所以CPU会将多条指令以流水线的形式执行，以充分利用CPU模块提高吞吐来提高多指令执行速度，即指令流水线。</p>
+<span id="more"></span>
+
+<p><strong>指令流水线级数</strong>(depth)：一个指令被分成多少个阶段执行。</p>
+<p><strong>CPU时钟周期</strong>：流水线最慢一级的处理时间（逻辑处理+流水线寄存器）</p>
+<p><strong>流水线延迟</strong>：完整的指令处理时间（指令流水线级数*CPU时钟周期）</p>
+<p><strong>吞吐量</strong>：每秒可处理最小单位指令数（G instruction per second）（1s&#x2F;CPU时钟周期）</p>
+<p>如三级流水线的CPU架构中，三条指令I1、I2、I3能够在4个时钟周期完成：</p>
+<p><img src="/images/Cpu-Pipeline/3LevelCpuArchitecture.png"></p>
+<h1 id="分支预测"><a href="#分支预测" class="headerlink" title="分支预测"></a>分支预测</h1><p>CPU处理分支时会先预测将会执行的指令，然后将对应的指令放进流水线，但可能会预测错误，导致流水线清空。</p>
+<h1 id="分支预测错误成本"><a href="#分支预测错误成本" class="headerlink" title="分支预测错误成本"></a>分支预测错误成本</h1><p>记D&#x3D;流水线深度，K&#x3D;指令预测错误出现的深度，则分支预测错误的成本为（K-1）时钟周期。所以流水线级数越高，分支预测错误带来的损耗越大。</p>
+<p>预测错误演示和分析如下：</p>
+<p>以4级流水线为例，4条一般指令（不同颜色）可以在8个时钟周期内通过不同的阶段并执行完。</p>
+<p><img src="/images/Cpu-Pipeline/PipelineNormal.png"></p>
+<p>而如果绿色跟紫色指令有依赖关系，如分支依赖、数据依赖，则在第3个时钟周期，本应该译码的紫色需要等待绿色执行完后再进行，增加的气泡表示指令延迟，相当于nop；第4时钟周期时，绿色执行后，紫色才恢复执行。此时指令执行完成额外消耗1个时钟周期。</p>
+<p><img src="/images/Cpu-Pipeline/PipelineDelay.png"></p>
+<p>而如果绿色跟紫色指令是分支（控制）依赖关系，且分支预测错误了，则会将当前流水线清空，并将正确分支的指令重新放进流水线执行；如Clock4，新的三条指令被重新放进pipeline重新开始执行。最终指令执行完成额外消耗3个时钟周期。</p>
+<p><img src="/images/Cpu-Pipeline/PipelinePredFault.png"></p>
+<h1 id="分支预测器"><a href="#分支预测器" class="headerlink" title="分支预测器"></a>分支预测器</h1><p><strong>分支預測器</strong>（英語：Branch predictor）是一種數位電路，在分支指令執行結束之前猜測哪一路分支將會被執行，以提高處理器的指令管線的效能。</p>
+<p><strong>動態預測</strong>：利用分支指令發生轉移的歷史來進行預測，並根據實際執行情況動態調整預測位，準確率可達90%，現在幾乎所有處理器都採用動態預測。</p>
+<p>详细的分支预测器介绍：<a href="https://zh.wikipedia.org/wiki/%E5%88%86%E6%94%AF%E9%A0%90%E6%B8%AC%E5%99%A8">分支预测器介绍</a></p>
+<h1 id="C-关键字-builtin-expect"><a href="#C-关键字-builtin-expect" class="headerlink" title="C++关键字 __builtin_expect"></a>C++关键字 __builtin_expect</h1><p>likely&#x2F;unlikely作用于编译器，编译器将更可能的分支指令放在分支后面，而更不可能的分支指令需要跳转执行，这样CPU分支预测器在预测的初期会更倾向于预测顺序执行的指令；而当CPU分支预测器的样本足够时会自动调整该分支预测结果。所以likely&#x2F;unlikely对分支刚开始执行时有帮助，基本上还是依赖于CPU的分支预测器。</p>
+<blockquote>
+<p>Many CPUs have a branch predictor, thus using these macros only helps the first time code is executed or when the history table is overwritten by a different branch with the same index into the branching table. <a href="https://stackoverflow.com/a/109721">stackoverflow</a></p>
+</blockquote>
+<h1 id="REFER"><a href="#REFER" class="headerlink" title="REFER"></a>REFER</h1><p><a href="https://zh.wikipedia.org/wiki/%E6%8C%87%E4%BB%A4%E7%AE%A1%E7%B7%9A%E5%8C%96">wiki:指令管線化</a></p>
+<p><a href="L11-Pipelined-Datapath-And.pdf">L11-Pipelined-Datapath-And.pdf</a></p>
+<p><strong>部分微架构流水线级数</strong></p>
+ <table class="wrapped confluenceTable" style="letter-spacing: 0.0px;"><colgroup><col /><col /></colgroup><thead><tr><th class="confluenceTh" style="text-align: center;">微架構<p>（Microarchitecture）</p></th><th class="confluenceTh" style="text-align: center;">管線層數<p>（Pipeline stages）</p></th></tr></thead><tbody><tr><td class="confluenceTd">Sony Cell</td><td class="confluenceTd">23</td></tr><tr><td class="confluenceTd">IBM PowerPC 7</td><td class="confluenceTd">17</td></tr><tr><td class="confluenceTd">IBM Xenon</td><td class="confluenceTd">19</td></tr><tr><td class="confluenceTd">AMD Athlon</td><td class="confluenceTd">10</td></tr><tr><td class="confluenceTd">AMD&nbsp;<a class="mw-redirect" title="Athlon XP" href="https://zh.wikipedia.org/wiki/Athlon_XP">Athlon XP</a></td><td class="confluenceTd">11</td></tr><tr><td class="confluenceTd">AMD&nbsp;<a class="mw-redirect" title="Athlon 64" href="https://zh.wikipedia.org/wiki/Athlon_64">Athlon 64</a></td><td class="confluenceTd">12</td></tr><tr><td class="confluenceTd">AMD&nbsp;<a class="mw-redirect" title="Phenom" href="https://zh.wikipedia.org/wiki/Phenom">Phenom</a></td><td class="confluenceTd">12</td></tr><tr><td class="confluenceTd">AMD&nbsp;<a title="Opteron" href="https://zh.wikipedia.org/wiki/Opteron">Opteron</a></td><td class="confluenceTd">15</td></tr><tr><td class="confluenceTd">ARM7TDMI (-S)</td><td class="confluenceTd">3</td></tr><tr><td class="confluenceTd">ARM7EJ-S</td><td class="confluenceTd">5</td></tr><tr><td class="confluenceTd">ARM810</td><td class="confluenceTd">5</td></tr><tr><td class="confluenceTd">ARM9TDMI</td><td class="confluenceTd">5</td></tr><tr><td class="confluenceTd">ARM1020E</td><td class="confluenceTd">6</td></tr><tr><td class="confluenceTd">XScale PXA210/PXA250</td><td class="confluenceTd">7</td></tr><tr><td class="confluenceTd">ARM1136J (F)-S</td><td class="confluenceTd">8</td></tr><tr><td class="confluenceTd">ARM1156T2 (F)-S</td><td class="confluenceTd">9</td></tr><tr><td class="confluenceTd">ARM Cortex-A5</td><td class="confluenceTd">8</td></tr><tr><td class="confluenceTd">ARM Cortex-A8</td><td class="confluenceTd">13</td></tr><tr><td class="confluenceTd">AVR32 AP7</td><td class="confluenceTd">7</td></tr><tr><td class="confluenceTd">AVR32 UC3</td><td class="confluenceTd">3</td></tr><tr><td class="confluenceTd"><a class="new" href="https://zh.wikipedia.org/w/index.php?title=DLX&amp;action=edit&amp;redlink=1">DLX</a></td><td class="confluenceTd">5</td></tr><tr><td class="confluenceTd"><a class="mw-redirect" title="Intel P5" href="https://zh.wikipedia.org/wiki/Intel_P5">Intel P5</a>（<a class="mw-redirect" title="Pentium" href="https://zh.wikipedia.org/wiki/Pentium">Pentium</a>）</td><td class="confluenceTd">5</td></tr><tr><td class="confluenceTd"><a class="mw-redirect" title="Intel P6" href="https://zh.wikipedia.org/wiki/Intel_P6">Intel P6</a>（<a class="mw-redirect" title="Pentium Pro" href="https://zh.wikipedia.org/wiki/Pentium_Pro">Pentium Pro</a>）</td><td class="confluenceTd">14</td></tr><tr><td class="confluenceTd">Intel P6（<a class="mw-redirect" title="Pentium III" href="https://zh.wikipedia.org/wiki/Pentium_III">Pentium III</a>）</td><td class="confluenceTd">10</td></tr><tr><td class="confluenceTd"><a class="mw-redirect" title="Intel NetBurst" href="https://zh.wikipedia.org/wiki/Intel_NetBurst">Intel NetBurst</a>（Willamette）</td><td class="confluenceTd">20</td></tr><tr><td class="confluenceTd">Intel NetBurst（Northwood）</td><td class="confluenceTd">20</td></tr><tr><td class="confluenceTd">Intel NetBurst（Prescott）</td><td class="confluenceTd">31</td></tr><tr><td class="confluenceTd">Intel NetBurst（Cedar Mill）</td><td class="confluenceTd">31</td></tr><tr><td class="confluenceTd"><a class="mw-redirect" title="Intel Core微處理器架構" href="https://zh.wikipedia.org/wiki/Intel_Core%E5%BE%AE%E8%99%95%E7%90%86%E5%99%A8%E6%9E%B6%E6%A7%8B">Intel Core</a></td><td class="confluenceTd">14</td></tr><tr><td class="confluenceTd"><a class="mw-redirect" title="Intel Atom" href="https://zh.wikipedia.org/wiki/Intel_Atom">Intel Atom</a></td><td class="confluenceTd">16</td></tr><tr><td class="confluenceTd">LatticeMico32</td><td class="confluenceTd">6</td></tr><tr><td class="confluenceTd">R4000</td><td class="confluenceTd">8</td></tr><tr><td class="confluenceTd">StrongARM SA-110</td><td class="confluenceTd">5</td></tr><tr><td class="confluenceTd">SuperH SH2</td><td class="confluenceTd">5</td></tr><tr><td class="confluenceTd">SuperH SH2A</td><td class="confluenceTd">5</td></tr><tr><td class="confluenceTd">SuperH SH4</td><td class="confluenceTd">5</td></tr><tr><td class="confluenceTd">SuperH SH4A</td><td class="confluenceTd">7</td></tr><tr><td class="confluenceTd"><a class="mw-redirect" title="UltraSPARC" href="https://zh.wikipedia.org/wiki/UltraSPARC">UltraSPARC</a></td><td class="confluenceTd">9</td></tr><tr><td class="confluenceTd"><a title="UltraSPARC T1" href="https://zh.wikipedia.org/wiki/UltraSPARC_T1">UltraSPARC T1</a></td><td class="confluenceTd">6</td></tr><tr><td class="confluenceTd"><a title="UltraSPARC T2" href="https://zh.wikipedia.org/wiki/UltraSPARC_T2">UltraSPARC T2</a></td><td class="confluenceTd">8</td></tr><tr><td class="confluenceTd"><a class="new" href="https://zh.wikipedia.org/w/index.php?title=WinChip&amp;action=edit&amp;redlink=1">WinChip</a></td><td class="confluenceTd">4</td></tr><tr><td class="confluenceTd"><a class="new" href="https://zh.wikipedia.org/w/index.php?title=LC2200_32_bit&amp;action=edit&amp;redlink=1">LC2200 32 bit</a></td><td class="confluenceTd">5</td></tr></tbody></table>
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/C/" rel="tag"># C++</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/post/SIMD-Optimization/" rel="prev" title="SIMD优化">
+                  <i class="fa fa-angle-left"></i> SIMD优化
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/post/AA-sort/" rel="next" title="AA sort">
+                  AA sort <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments gitalk-container"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2023</span>
+    <span class="with-love">
+      <i class="user"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Bon</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/mist/" rel="noopener" target="_blank">NexT.Mist</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/gitalk/1.8.0/gitalk.css" integrity="sha256-AJnUHL7dBv6PGaeyPQJcgQPDjt/Hn/PvYZde1iqfp8U=" crossorigin="anonymous">
+
+<script class="next-config" data-name="gitalk" type="application/json">{"enable":true,"github_id":"yezhenbang","repo":"yezhenbang.github.io","client_id":"262d1fe0ae8ea70809f1","client_secret":"248d4ca388eac2a7e04d45d9e76e5e810c9b77a7","admin_user":"yezhenbang","distraction_free_mode":true,"proxy":"https://cors-anywhere.azm.workers.dev/https://github.com/login/oauth/access_token","language":null,"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/gitalk/1.8.0/gitalk.min.js","integrity":"sha256-MVK9MGD/XJaGyIghSVrONSnoXoGh3IFxLw0zfvzpxR4="},"path_md5":"e504e471d1e1b378e373ae74c2d1b84d"}</script>
+<script src="/js/third-party/comments/gitalk.js"></script>
+
+</body>
+</html>

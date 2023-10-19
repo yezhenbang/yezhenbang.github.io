@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.0.0-rc1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha256-CTSx/A06dm1B063156EVh15m6Y67pAjZZaQc89LLSrU=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"yezhenbang.github.io","root":"/","images":"/images","scheme":"Mist","darkmode":false,"version":"8.18.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},"copycode":{"enable":true,"style":null,"show_result":true},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":false,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="由于类字节对齐不一致导致访问成员时地址错乱，造成访问越界等问题。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C++ 字节对齐导致的地址越界">
+<meta property="og:url" content="https://yezhenbang.github.io/post/C-%E5%AD%97%E8%8A%82%E5%AF%B9%E9%BD%90%E5%AF%BC%E8%87%B4%E7%9A%84%E5%9C%B0%E5%9D%80%E8%B6%8A%E7%95%8C/index.html">
+<meta property="og:site_name" content="bon">
+<meta property="og:description" content="由于类字节对齐不一致导致访问成员时地址错乱，造成访问越界等问题。">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2019-06-24T02:12:06.000Z">
+<meta property="article:modified_time" content="2023-10-19T06:42:31.700Z">
+<meta property="article:author" content="Bon">
+<meta property="article:tag" content="C++">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://yezhenbang.github.io/post/C-%E5%AD%97%E8%8A%82%E5%AF%B9%E9%BD%90%E5%AF%BC%E8%87%B4%E7%9A%84%E5%9C%B0%E5%9D%80%E8%B6%8A%E7%95%8C/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://yezhenbang.github.io/post/C-%E5%AD%97%E8%8A%82%E5%AF%B9%E9%BD%90%E5%AF%BC%E8%87%B4%E7%9A%84%E5%9C%B0%E5%9D%80%E8%B6%8A%E7%95%8C/","path":"post/C-字节对齐导致的地址越界/","title":"C++ 字节对齐导致的地址越界"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>C++ 字节对齐导致的地址越界 | bon</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">bon</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="home fa-fw"></i>Home</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="archive fa-fw"></i>Archives</a></li><li class="menu-item menu-item-ex"><a href="http://47.102.106.240:8080/" rel="section" target="_blank"><i class="user fa-fw"></i>Ex</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A1%A8%E7%8E%B0%E5%8F%8A%E8%83%8C%E6%99%AF"><span class="nav-number">1.</span> <span class="nav-text">表现及背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%87%E7%A8%8B"><span class="nav-number">2.</span> <span class="nav-text">过程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%80%E5%90%8E"><span class="nav-number">3.</span> <span class="nav-text">最后</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Bon</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">20</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/yezhenbang" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;yezhenbang" rel="noopener me" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://yezhenbang.github.io/post/C-%E5%AD%97%E8%8A%82%E5%AF%B9%E9%BD%90%E5%AF%BC%E8%87%B4%E7%9A%84%E5%9C%B0%E5%9D%80%E8%B6%8A%E7%95%8C/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Bon">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="bon">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="C++ 字节对齐导致的地址越界 | bon">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          C++ 字节对齐导致的地址越界
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2019-06-24 10:12:06" itemprop="dateCreated datePublished" datetime="2019-06-24T10:12:06+08:00">2019-06-24</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2023-10-19 14:42:31" itemprop="dateModified" datetime="2023-10-19T14:42:31+08:00">2023-10-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/BUG/" itemprop="url" rel="index"><span itemprop="name">BUG</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>由于类字节对齐不一致导致访问成员时地址错乱，造成访问越界等问题。</p>
+<span id="more"></span>
+
+<h2 id="表现及背景"><a href="#表现及背景" class="headerlink" title="表现及背景"></a>表现及背景</h2><p>将程序从32位升级64位后，程序内存访问越界；</p>
+<p>将A类作为入参调用一个函数，进入函数后A的成员变量就完全乱了（最开始还以为是编译器优化导致的监视变量不成功）；进而引发的0xffff访问出错等一系列问题。</p>
+<h2 id="过程"><a href="#过程" class="headerlink" title="过程"></a>过程</h2><p>升级64位时，程序中使用的32位变量地址转换可能会出现异常，参考<a href="https://blog.csdn.net/xt18971492243/article/details/80945195">32位代码移植到64位需注意问题</a>等博客；但是分析了一波，出现异常时并没有在处理赋值、类型转换等操作，除非是调用函数时A的拷贝构造函数出错了，但是是引用传递，就算改为指针传递也出现同样问题。</p>
+<p>进而猜测是编译器层面的错误，所以比较了64位和以前32位的项目属性设置，得不出结果，稍微留意了<code>/Zp 结构成员对齐</code>的设置，从默认改成了<code>16</code>和<code>8</code>，但依然出现问题（没有尝试<code>4</code>，不然可能可以更早发现问题）。</p>
+<p><em>btw，根据<a href="https://docs.microsoft.com/zh-cn/cpp/build/reference/zp-struct-member-alignment?view=vs-2017">MS官网</a>，<code>16</code>是64位程序的默认对齐，而<code>8</code>是32位的默认对齐，但实际上64位8个byte应该8字节对齐？而32位则应该是4？</em> </p>
+<p>后来想看看指针传递过程中指针是不是变了，却发现A类指针没变，但里面某一个成员变量的地址却变了，偏移了4个字节；一下子有了方向，并且找到了一个情况类似的<a href="https://www.oschina.net/question/2323945_2279721">全局对象成员地址改变的文章</a>；于是用文中提到的&#x2F;d1 reportSingleClassLayoutA编译选项去看A的内存分布，果然发现了在编译不同的cpp时，出现了一个不一样的结果：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">1&gt;A.cpp</span><br><span class="line">1&gt;class A	size(1088):</span><br><span class="line">1&gt;	+---</span><br><span class="line">1&gt; 0	| Config config_</span><br><span class="line">1&gt;784	| last_store_</span><br><span class="line">1&gt;788	| is_tried_</span><br><span class="line">1&gt;  	| &lt;alignment member&gt; (size=3)</span><br><span class="line">1&gt;792	| blocking_threshold_</span><br><span class="line">1&gt;  	| &lt;alignment member&gt; (size=4)          &lt;---多了4字节对齐</span><br><span class="line">1&gt;800	| index_table_header</span><br><span class="line">......</span><br><span class="line">1&gt;960	| result_table_header</span><br><span class="line"></span><br><span class="line">&gt;B.cpp</span><br><span class="line">1&gt;class A	size(1084):</span><br><span class="line">1&gt;	+---</span><br><span class="line">1&gt; 0	| Config config_</span><br><span class="line">1&gt;784	| last_store_</span><br><span class="line">1&gt;788	| is_tried_</span><br><span class="line">1&gt;  	| &lt;alignment member&gt; (size=3)</span><br><span class="line">1&gt;792	| blocking_threshold_</span><br><span class="line">1&gt;796	| index_table_header</span><br><span class="line">......</span><br><span class="line">1&gt;956	| result_table_header</span><br><span class="line">1&gt;	+---</span><br></pre></td></tr></table></figure>
+
+<p>在编译A.cpp时，编译器对Class A的内存对齐比B.cpp多了4字节的预留，导致后面的所有成员变量都偏移了，数据自然就不对了，取其中string成员的时候就发生了内存越界。</p>
+<p>最后是在全局搜索<code>#pragma pack</code>发现了根本原因，在项目使用的一个三方库中，有一个头文件使用了<code>#pragma pack(1)</code>但最后却使用<code>#pragma pack(4)</code>而不是<code>#pragma pack()</code>恢复默认，导致B.cpp在引用该头文件之后编译的对齐方式都改变了，导致了这样的错误。而原来32位程序中，本来对齐方式就是4字节，因此没有出现问题.</p>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>MS官网上的32位默认8字节对齐、64位默认16字节对齐是忽悠的。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/C/" rel="tag"># C++</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/post/TensorFlow-Examples-K-Means/" rel="prev" title="TensorFlow Examples K-Means">
+                  <i class="fa fa-angle-left"></i> TensorFlow Examples K-Means
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/post/css/" rel="next" title="css">
+                  css <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments gitalk-container"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2023</span>
+    <span class="with-love">
+      <i class="user"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Bon</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/mist/" rel="noopener" target="_blank">NexT.Mist</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/gitalk/1.8.0/gitalk.css" integrity="sha256-AJnUHL7dBv6PGaeyPQJcgQPDjt/Hn/PvYZde1iqfp8U=" crossorigin="anonymous">
+
+<script class="next-config" data-name="gitalk" type="application/json">{"enable":true,"github_id":"yezhenbang","repo":"yezhenbang.github.io","client_id":"262d1fe0ae8ea70809f1","client_secret":"248d4ca388eac2a7e04d45d9e76e5e810c9b77a7","admin_user":"yezhenbang","distraction_free_mode":true,"proxy":"https://cors-anywhere.azm.workers.dev/https://github.com/login/oauth/access_token","language":null,"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/gitalk/1.8.0/gitalk.min.js","integrity":"sha256-MVK9MGD/XJaGyIghSVrONSnoXoGh3IFxLw0zfvzpxR4="},"path_md5":"ef517373d0ba6dfe85c9240d34e1a2a9"}</script>
+<script src="/js/third-party/comments/gitalk.js"></script>
+
+</body>
+</html>
