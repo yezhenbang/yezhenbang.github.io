@@ -26,7 +26,7 @@
 <meta property="og:description" content="待整理项">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2023-04-28T09:03:27.000Z">
-<meta property="article:modified_time" content="2023-10-20T02:16:33.973Z">
+<meta property="article:modified_time" content="2023-11-17T07:07:32.703Z">
 <meta property="article:author" content="Bon">
 <meta name="twitter:card" content="summary">
 
@@ -150,7 +150,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">20</span>
+          <span class="site-state-item-count">21</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -229,7 +229,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2023-10-20 10:16:33" itemprop="dateModified" datetime="2023-10-20T10:16:33+08:00">2023-10-20</time>
+      <time title="Modified: 2023-11-17 15:07:32" itemprop="dateModified" datetime="2023-11-17T15:07:32+08:00">2023-11-17</time>
     </span>
 
   
@@ -246,7 +246,11 @@
 
 <h1 id="TMUX"><a href="#TMUX" class="headerlink" title="TMUX"></a>TMUX</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">tmux new-session -d -s monitor <span class="string">&#x27;top&#x27;</span> \; \</span><br><span class="line">  split-window -h <span class="string">&#x27;watch -n 1 nvidia-smi&#x27;</span> \; \</span><br><span class="line">  select-pane -t 1 \; \</span><br><span class="line">  split-window -v <span class="string">&#x27;watch -n 1  &quot;ps aux| head -1; ps aux | sort -rnk 4 | head -10&quot;&#x27;</span> \;</span><br><span class="line"> </span><br><span class="line">tmux a -t monitor</span><br></pre></td></tr></table></figure>
 
-<h1 id="SSH端口转发"><a href="#SSH端口转发" class="headerlink" title="SSH端口转发"></a>SSH端口转发</h1><p>设备172.20.1.22连接到服务器10.66.149.146，在服务器执行<br>ssh -CfNg -L 2222:172.20.1.22:22 <a href="mailto:&#112;&#101;&#x72;&#99;&#101;&#x70;&#116;&#105;&#x6f;&#x6e;&#x40;&#x31;&#x30;&#46;&#x36;&#54;&#46;&#x31;&#x34;&#57;&#x2e;&#x31;&#x34;&#x36;">&#112;&#101;&#x72;&#99;&#101;&#x70;&#116;&#105;&#x6f;&#x6e;&#x40;&#x31;&#x30;&#46;&#x36;&#54;&#46;&#x31;&#x34;&#57;&#x2e;&#x31;&#x34;&#x36;</a><br>ssh -CfNg -L 8088:172.20.1.22:8080 <a href="mailto:&#112;&#x65;&#x72;&#x63;&#101;&#112;&#x74;&#105;&#x6f;&#110;&#x40;&#49;&#48;&#x2e;&#x36;&#x36;&#x2e;&#x31;&#52;&#x39;&#x2e;&#x31;&#52;&#54;">&#112;&#x65;&#x72;&#x63;&#101;&#112;&#x74;&#105;&#x6f;&#110;&#x40;&#49;&#48;&#x2e;&#x36;&#x36;&#x2e;&#x31;&#52;&#x39;&#x2e;&#x31;&#52;&#54;</a></p>
+<p>保存当前窗口的所有</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -n n行; - 所有</span></span><br><span class="line">capture-pane -S -</span><br><span class="line">save-buffer tmux.log</span><br></pre></td></tr></table></figure>
+
+
+<h1 id="SSH端口转发"><a href="#SSH端口转发" class="headerlink" title="SSH端口转发"></a>SSH端口转发</h1><p>设备172.20.1.22连接到服务器10.66.149.146，在服务器执行<br>ssh -CfNg -L 2222:172.20.1.22:22 <a href="mailto:&#112;&#101;&#114;&#99;&#101;&#x70;&#x74;&#105;&#x6f;&#x6e;&#x40;&#x31;&#48;&#x2e;&#x36;&#x36;&#46;&#x31;&#x34;&#57;&#x2e;&#49;&#x34;&#54;">&#112;&#101;&#114;&#99;&#101;&#x70;&#x74;&#105;&#x6f;&#x6e;&#x40;&#x31;&#48;&#x2e;&#x36;&#x36;&#46;&#x31;&#x34;&#57;&#x2e;&#49;&#x34;&#54;</a><br>ssh -CfNg -L 8088:172.20.1.22:8080 <a href="mailto:&#x70;&#x65;&#x72;&#99;&#x65;&#112;&#116;&#x69;&#111;&#110;&#x40;&#x31;&#x30;&#46;&#x36;&#54;&#x2e;&#x31;&#x34;&#x39;&#46;&#49;&#52;&#x36;">&#x70;&#x65;&#x72;&#99;&#x65;&#112;&#116;&#x69;&#111;&#110;&#x40;&#x31;&#x30;&#46;&#x36;&#54;&#x2e;&#x31;&#x34;&#x39;&#46;&#49;&#52;&#x36;</a></p>
 <h1 id="查找AVX-SSE-指令受哪个编译选项控制"><a href="#查找AVX-SSE-指令受哪个编译选项控制" class="headerlink" title="查找AVX SSE 指令受哪个编译选项控制"></a>查找AVX SSE 指令受哪个编译选项控制</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="title">get_instruction</span></span> ()</span><br><span class="line">&#123;</span><br><span class="line">    [ -z <span class="string">&quot;<span class="variable">$1</span>&quot;</span> ] &amp;&amp; <span class="built_in">exit</span></span><br><span class="line">    func_name=<span class="string">&quot;<span class="variable">$1</span> &quot;</span></span><br><span class="line"> </span><br><span class="line">    header_file=`grep --include=\*intrin.h -Rl <span class="string">&quot;<span class="variable">$func_name</span>&quot;</span> /usr/lib/gcc | <span class="built_in">head</span> -n1`</span><br><span class="line">    [ -z <span class="string">&quot;<span class="variable">$header_file</span>&quot;</span> ] &amp;&amp; <span class="built_in">exit</span></span><br><span class="line">    &gt;&amp;2 <span class="built_in">echo</span> <span class="string">&quot;find in: <span class="variable">$header_file</span>&quot;</span></span><br><span class="line"> </span><br><span class="line">    target_directive=`grep <span class="string">&quot;#pragma GCC target(\|<span class="variable">$func_name</span>&quot;</span> <span class="variable">$header_file</span> | grep -B 1 <span class="string">&quot;<span class="variable">$func_name</span>&quot;</span> | <span class="built_in">head</span> -n1`</span><br><span class="line">    <span class="built_in">echo</span> <span class="variable">$target_directive</span> | grep -o <span class="string">&#x27;&quot;[^,]*[,&quot;]&#x27;</span> | sed <span class="string">&#x27;s/&quot;//g&#x27;</span> | sed <span class="string">&#x27;s/,//g&#x27;</span></span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">instruction=`get_instruction <span class="variable">$1</span>`</span><br><span class="line"><span class="keyword">if</span> [ -z <span class="string">&quot;<span class="variable">$instruction</span>&quot;</span> ]; <span class="keyword">then</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&quot;Error: function not found: <span class="variable">$1</span>&quot;</span></span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&quot;add this option to gcc: -m<span class="variable">$instruction</span>&quot;</span></span><br><span class="line">    gcc -m<span class="variable">$instruction</span> -dM -E - &lt; /dev/null | egrep <span class="string">&quot;SSE|AVX&quot;</span> | <span class="built_in">sort</span></span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></table></figure>
 
 
